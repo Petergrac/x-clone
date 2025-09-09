@@ -56,7 +56,7 @@ const LeftBar = () => {
                   height={24}
                   alt=""
                 />
-                <p className="hidden xl:inline">{item.name}</p>
+                <p className="hidden xl:inline text-white/75">{item.name}</p>
               </Link>
             </div>
           ))}
@@ -64,13 +64,13 @@ const LeftBar = () => {
         {/* BUTTON */}
         <Link
           href="/compose/post"
-          className=" bg-white w-12 px-2 h-12 text-black rounded-full xl:hidden  flex items-center justify-center"
+          className=" bg-white/75 w-12 px-2 h-12 text-black rounded-full xl:hidden  flex items-center justify-center"
         >
           <Image src="/icons/post.svg" width={27} height={27} alt="" />
         </Link>
         <Link
           href="/compose/post"
-          className="hidden xl:block font-bold bg-white text-black rounded-full py-2 px-20"
+          className="hidden xl:block font-bold bg-white/75 text-black rounded-full py-2 px-20"
         >
           Post
         </Link>
