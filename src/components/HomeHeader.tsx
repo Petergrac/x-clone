@@ -1,5 +1,4 @@
 import PostFilter from "@/components/PostFilter";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 
 import Link from "next/link";
@@ -29,12 +28,15 @@ const HomeHeader = () => {
       {/* POST INPUT */}
       <div className="w-full flex items-start border-b">
         {/* AVATAR */}
-        <div className="p-5">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-        </div>
+        <Link href='/username' className="p-5" >
+          <Image 
+          src='https://github.com/shadcn.png'
+          alt=""
+          width={44}
+          height={44}
+          className="rounded-full overflow-hidden"
+          />
+        </Link>
         {/* SECTION 2 */}
         <div className="flex grow flex-col">
           {/* INPUT & PERSONALIZATION */}
