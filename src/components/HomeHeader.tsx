@@ -52,14 +52,22 @@ const HomeHeader = () => {
           <div className="flex justify-between items-center py-2 pr-5">
             <div className="flex gap-3 ">
               {media.map((icon) => (
-                <Image
-                  className="hover:bg-sky-500/55 rounded-full anim"
-                  key={icon}
-                  src={icon}
-                  alt=""
-                  width={24}
-                  height={24}
-                />
+                <div className="" key={icon}>
+                  {icon === "/icons/image.svg" ? (
+                    <label htmlFor="image">
+                      <Image src={icon} width={24} height={24} alt={icon} />
+                      <input type="file" className="hidden" name="images" id="image" />
+                    </label>
+                  ) : (
+                    <Image
+                      className="hover:bg-sky-500/55 rounded-full anim"
+                      src={icon}
+                      alt=""
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                </div>
               ))}
             </div>
             <button className="w-fit hover:bg-white/55 anim bg-white/75 text-black font-bold text-lg py-2 px-4 rounded-full">
