@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import prisma from "@/lib/prisma";
 const menuList = [
   { id: 1, name: "Homepage", link: "/", icon: "home.svg" },
   { id: 2, name: "Explore", link: "/", icon: "explore.svg" },
@@ -19,7 +20,16 @@ const menuList = [
   { id: 10, name: "More", link: "/", icon: "more.svg" },
 ];
 
-const LeftBar = () => {
+const LeftBar = async () => {
+  const user = await prisma.user.findUnique({
+    where: {
+      username: "peterdev",
+    },
+  });
+  if (!user) return null;
+  const fallBacks =
+    user.name.split(" ")[0].slice(0, 1) + user.name.split(" ")[1].slice(0, 1);
+
   return (
     <div className="h-screen sticky top-0 hidden sm:flex flex-col justify-between pt-2 pb-8 pr-2">
       {/* LOGO MENU BUTTON */}
@@ -80,12 +90,17 @@ const LeftBar = () => {
       <div className="flex items-center justify-between anim hover:bg-muted-foreground/35 cursor-pointer rounded-full p-2">
         <div className="flex gap-1 items-center">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage
+              src={`${
+                user?.avatar ? user.avatar : "https://github.com/shadcn.png"
+              }`}
+              alt="@shadcn"
+            />
+            <AvatarFallback>{fallBacks}</AvatarFallback>
           </Avatar>
           <div className="xl:flex hidden  flex-col items-center justify-center">
-            <span className="text-sm font-bold">Apostle254</span>
-            <span className="text-sm font-extralight">@apostle254</span>
+            <span className="text-sm font-bold">{user.username}</span>
+            <span className="text-sm font-extralight">@{user.username}</span>
           </div>
         </div>
         <DropdownMenu>
@@ -97,7 +112,7 @@ const LeftBar = () => {
               <Link href="/login">Add an existing account</Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="font-bold text-[14px]">
-              <Link href="/logout">Log out @apostle254</Link>
+              <Link href="/logout">Log out @{user.username}</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

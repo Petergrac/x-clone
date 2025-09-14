@@ -1,9 +1,10 @@
-
-
 import Link from "next/link";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import PostInput from "./PostInput";
 
+type UserType = {
+  avatar: string | null;
+};
 
 const HomeHeader = ({
   isRelated,
@@ -13,6 +14,21 @@ const HomeHeader = ({
     setRelated: Dispatch<SetStateAction<boolean>>;
   };
 }) => {
+  const [user, setUser] = useState<UserType | null>(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const res = await fetch("/api/username");
+        const data = (await res.json()) as UserType;
+        setUser(data); // store in state for rendering
+      } catch (err) {
+        console.error("Failed to fetch user:", err);
+      }
+    }
+
+    fetchUser();
+  }, []);
   return (
     <div>
       <h1 className="text-2xl font-bold text-center py-4 sm:hidden">X-Clone</h1>
@@ -37,7 +53,7 @@ const HomeHeader = ({
         </Link>
       </nav>
       {/* POST INPUT */}
-      <PostInput post='Post'/>
+      <PostInput post="Post" user={user} />
     </div>
   );
 };

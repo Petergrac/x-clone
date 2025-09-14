@@ -9,15 +9,19 @@ const media = [
   "/icons/schedule.svg",
   "/icons/userLocation.svg",
 ];
+type UserType = {
+  avatar: string | null;
+} | null;
 
-const PostInput = (post: { post: string }) => {
+const PostInput = ({ post, user }: { post: string; user?: UserType }) => {
+  console.log(user);
   return (
     <div>
       <div className="w-full flex items-start border-b mt-10">
         {/* AVATAR */}
         <Link href="/username" className="p-5">
           <Image
-            src="https://github.com/shadcn.png"
+            src={user?.avatar || "https://github.com/shadcn.png"}
             alt=""
             width={44}
             height={44}
@@ -32,7 +36,7 @@ const PostInput = (post: { post: string }) => {
             <input
               type="text"
               placeholder={`${
-                post.post === "post" ? "What's happening?" : "Post your Reply"
+                post === "post" ? "What's happening?" : "Post your Reply"
               }`}
               className="bg-transparent outline-none p-2 w-full placeholder:text-xl placeholder:text-muted-foreground"
             />
@@ -67,7 +71,7 @@ const PostInput = (post: { post: string }) => {
               ))}
             </div>
             <button className="w-fit hover:bg-white/55 anim bg-white/75 text-black font-bold text-lg py-2 px-4 rounded-full">
-              {post.post}
+              {post}
             </button>
           </div>
         </div>
