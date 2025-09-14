@@ -2,6 +2,7 @@ import PostFilter from "@/components/PostFilter";
 import Image from "next/image";
 
 import Link from "next/link";
+import { Dispatch, SetStateAction } from "react";
 const media = [
   "/icons/image.svg",
   "/icons/gif.svg",
@@ -11,30 +12,46 @@ const media = [
   "/icons/userLocation.svg",
 ];
 
-const HomeHeader = () => {
+const HomeHeader = ({
+  isRelated,
+}: {
+  isRelated: {
+    related: boolean;
+    setRelated: Dispatch<SetStateAction<boolean>>;
+  };
+}) => {
   return (
     <div>
-      <nav className="w-full pt-5 flex justify-between md:justify-around border-b">
-        <Link href="/home" className="font-extrabold border-b-4 border-sky-600">
+      <nav className="w-full pt-5 flex justify-between md:justify-around border-b sm:sticky fixed top-0 z-10 bg-black/50  px-4">
+        <Link
+          href="/"
+          className={`${
+            isRelated.related && "font-extrabold border-b-4 border-sky-600"
+          }`}
+          onClick={() => isRelated.setRelated(true)}
+        >
           For you
         </Link>
         <Link
-          href={`/home`}
-          className="font-extrabold pb-2 border-b-4 border-sky-600"
+          href={`/`}
+          className={`${
+            !isRelated.related && "font-extrabold border-b-4 border-sky-600"
+          }`}
+          onClick={() => isRelated.setRelated(false)}
         >
           Following
         </Link>
       </nav>
       {/* POST INPUT */}
-      <div className="w-full flex items-start border-b">
+      <div className="w-full flex items-start border-b mt-10">
         {/* AVATAR */}
-        <Link href='/username' className="p-5" >
-          <Image 
-          src='https://github.com/shadcn.png'
-          alt=""
-          width={44}
-          height={44}
-          className="rounded-full overflow-hidden"
+        <Link href="/username" className="p-5">
+          <Image
+            src="https://github.com/shadcn.png"
+            alt=""
+            width={44}
+            height={44}
+            className="rounded-full overflow-hidden"
           />
         </Link>
         {/* SECTION 2 */}
@@ -58,7 +75,12 @@ const HomeHeader = () => {
                   {icon === "/icons/image.svg" ? (
                     <label htmlFor="image">
                       <Image src={icon} width={24} height={24} alt={icon} />
-                      <input type="file" className="hidden" name="images" id="image" />
+                      <input
+                        type="file"
+                        className="hidden"
+                        name="images"
+                        id="image"
+                      />
                     </label>
                   ) : (
                     <Image

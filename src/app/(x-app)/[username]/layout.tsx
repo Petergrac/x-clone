@@ -25,7 +25,7 @@ export default function InLayout({
           </div>
         </div>
         {/* BANNER  & USER DETAILS*/}
-        <div className="">
+        <div>
           <UserDetails />
         </div>
         {/* NAV MENU TO NAVIGATE WITH DIFFERENT FILTERS */}

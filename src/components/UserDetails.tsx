@@ -1,5 +1,6 @@
 import { Calendar1Icon } from "lucide-react";
 import Image from "next/image";
+import ProfileDialog from "./ProfileDialog";
 
 const UserDetails = () => {
   return (
@@ -23,11 +24,9 @@ const UserDetails = () => {
           height={133}
         />
       </div>
-      {/* EDIT BUTTON */}
+      {/* EDIT BUTTON OR SUBSCRIBE */}
       <div className="flex justify-end w-full">
-        <button className="py-2 px-4 font-bold border-1 mt-4 rounded-full anim hover:bg-gray-800 border-gray-200 mr-3">
-          Edit Profile
-        </button>
+          <ProfileDialog />
       </div>
 
       {/* User Details */}
@@ -47,12 +46,12 @@ const UserDetails = () => {
         </div>
         {/* FOLLOWERS & FOLLOWING */}
         <div className="flex items-center gap-3">
-            {/* Following */}
+          {/* Following */}
           <p className="text-gray-500 ">
             <span className="font-bold text-white">121</span> Following
           </p>
           {/* Followers */}
-           <p className="text-gray-500 ">
+          <p className="text-gray-500 ">
             <span className="font-bold text-white">11</span> Followers
           </p>
         </div>

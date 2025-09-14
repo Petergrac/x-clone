@@ -5,5 +5,5 @@ export default function XLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main className="md:w-150 w-90 border-x-1 overflow-y-auto min-h-screen">{children}</main>;
+  return <main className="md:w-150 w-full border-x-1 overflow-y-auto min-h-screen">{children}</main>;
 }

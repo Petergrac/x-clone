@@ -21,7 +21,7 @@ const menuList = [
 
 const LeftBar = () => {
   return (
-    <div className="h-screen sticky top-0 flex flex-col justify-between pt-2 pb-8 pr-2">
+    <div className="h-screen sticky top-0 hidden sm:flex flex-col justify-between pt-2 pb-8 pr-2">
       {/* LOGO MENU BUTTON */}
       <div className="flex flex-col gap-4 items-center text-lg 2xl:items-start">
         <Link

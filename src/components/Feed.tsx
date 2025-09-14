@@ -28,14 +28,21 @@ const Feed = () => {
           {/* User Info */}
           <div className="flex items-center gap-2">
             {/* Username */}
-            <Link href={`/username`} className="text-lg font-semibold text-white/85">
+            <Link
+              href={`/username`}
+              className="text-lg font-semibold text-white/85"
+            >
               Goddie
             </Link>
             {/* tweet handle */}
-            <Link href={`/username`} className="text-gray-500">@Goodie_ke</Link>
+            <Link href={`/username`} className="text-gray-500">
+              @Goodie_ke
+            </Link>
             <p className="text-gray-500">&middot;</p>
             {/* Date */}
-            <Link href={`/username/status/postId`} className="text-gray-500">Sep 8</Link>
+            <Link href={`/username/status/postId`} className="text-gray-500">
+              Sep 8
+            </Link>
           </div>
           {/* More */}
           <MoreHorizontal
@@ -45,10 +52,16 @@ const Feed = () => {
         </div>
         {/* Tweet content */}
         <Link href={`/username/status/postId`} className="text-white/85 pr-2">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe ipsam
-          est ab accusantium iusto qui aperiam at fugiat amet itaque omnis
-          nesciunt necessitatibus tenetur officia sequi, consequatur veniam cum.
-          Voluptates!
+          <p className="h-32 overflow-hidden">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe ipsam
+            est ab accusantium iusto qui aperiam at fugiat amet itaque omnis
+            nesciunt necessitatibus tenetur officia sequi, consequatur veniam cum.
+            Voluptates! Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Modi impedit minus facere incidunt voluptates eos, quo blanditiis
+            reprehenderit, porro neque quidem quod ipsum! Facere est animi quod,
+            dolores quia cumque.
+          </p>
+          <button className="hover:text-sky-400 hover:underline text-end">Show more</button>
         </Link>
         {/* Image, video, gif content */}
         <Link href={`/username/status/postId`} className="mx-auto w-full">
@@ -63,17 +76,25 @@ const Feed = () => {
         {/* Comment, repost, like, views, save, share */}
         <div className="flex text-gray-500 justify-between pr-4 mt-2">
           <p className="flex items-center gap-2 hover:text-sky-500 anim cursor-pointer">
-            <MessageCircle width={20}  /> 213
+            <MessageCircle width={20} /> 213
           </p>
           <p className="flex items-center gap-2 hover:text-green-400 cursor-pointer">
-            <Repeat width={20} />50
+            <Repeat width={20} />
+            50
           </p>
           <p className="flex items-center gap-2 cursor-pointer hover:text-rose-600 anim">
-            <Heart width={20} />1.3k
+            <Heart width={20} />
+            1.3k
           </p>
           <div className="flex gap-4 ">
-            <Bookmark width={40} className="hover:text-sky-500 cursor-pointer anim" />
-            <Share width={20} className="cursor-pointer hover:text-sky-500 anim"/>
+            <Bookmark
+              width={40}
+              className="hover:text-sky-500 cursor-pointer anim"
+            />
+            <Share
+              width={20}
+              className="cursor-pointer hover:text-sky-500 anim"
+            />
           </div>
         </div>
       </div>

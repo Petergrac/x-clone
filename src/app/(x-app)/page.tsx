@@ -1,11 +1,14 @@
+"use client"
 import Feed from "@/components/Feed";
 import HomeHeader from "@/components/HomeHeader";
+import { useState } from "react";
 
 export default function Home() {
+  const[related, setRelated] = useState(false);
   return (
     <div >
       {/* Post Creation Section */}
-      <HomeHeader />
+      <HomeHeader isRelated={{related, setRelated}} />
       {/* Personalized posts */}
       <Feed />
       <Feed />
