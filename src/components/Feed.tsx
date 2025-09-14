@@ -12,15 +12,39 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-const Feed = () => {
+export type FilteredTweet = {
+  id: string;
+  content: string;
+  authorId: string;
+  parentId: string | null;
+  createdAt: Date;
+  author: {
+    username: string;
+    avatar: string | null;// optional in case not always available
+  };
+  _count: {
+    replies: number;
+    likes: number;
+    retweets: number;
+  };
+};
+
+const Feed = ( post: {post: filteredPostsType}) => {
   const [showMore, setShowMore] = useState(false);
+  console.log(post.post.author.avatar)
   return (
     <div className="w-full flex items-start border-t py-3">
       {/* Profile */}
       <Link href={`/username`} className="p-4">
         <Avatar>
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage
+              src={
+                post.post.author.avatar 
+                "https://github.com/shadcn.png"
+              }
+              alt="@shadcn"
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </Avatar>

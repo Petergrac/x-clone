@@ -1,4 +1,4 @@
-import Feed from "@/components/Feed";
+import Feed, { FilteredTweet } from "@/components/Feed";
 import prisma from "@/lib/prisma";
 
 const FilteredPosts = async ({
@@ -7,7 +7,9 @@ const FilteredPosts = async ({
   params: Promise<{ filter: string }>;
 }) => {
   const paramsDetails = await (await params).filter;
-  let filteredPosts;
+  let tweets;
+
+
   // Check for replies
   if (paramsDetails === "replies") {
     filteredPosts = await prisma.tweet.findMany({
@@ -68,10 +70,45 @@ const FilteredPosts = async ({
       },
     });
   }
-  console.log(filteredPosts);
+
+  // Normalize the tweet
+  function normalizePost(tweet): FilteredTweet {
+  if ('tweet' in filteredPosts) {
+    const t = filteredPosts.tweet;
+    return {
+      id: t.id,
+      content: t.content,
+      authorId: t.authorId,
+      parentId: t.parentId,
+      createdAt: t.createdAt,
+      author: {
+        username: t.author.username,
+        avatar: t.author.avatar,
+      },
+      _count: t._count,
+    };
+  } else {
+    return {
+      id: post.id,
+      content: post.content,
+      authorId: post.authorId,
+      parentId: post.parentId,
+      createdAt: post.createdAt,
+      author: {
+        username: post.author.username,
+        avatar: post.author.avatar,
+      },
+      _count: post._count,
+    };
+  }
+}
   return (
     <div>
-      <Feed />
+      {filteredPosts?.map(post=>(
+        <div className="" key={post.id} >
+          <Feed post={post}/>
+        </div>
+      ))}
     </div>
   );
 };
