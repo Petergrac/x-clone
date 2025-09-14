@@ -1,3 +1,4 @@
+"use client";
 import {
   Bookmark,
   Heart,
@@ -9,8 +10,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 const Feed = () => {
+  const [showMore, setShowMore] = useState(false);
   return (
     <div className="w-full flex items-start border-t py-3">
       {/* Profile */}
@@ -52,17 +55,23 @@ const Feed = () => {
         </div>
         {/* Tweet content */}
         <Link href={`/username/status/postId`} className="text-white/85 pr-2">
-          <p className="h-32 overflow-hidden">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe ipsam
-            est ab accusantium iusto qui aperiam at fugiat amet itaque omnis
-            nesciunt necessitatibus tenetur officia sequi, consequatur veniam cum.
-            Voluptates! Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Modi impedit minus facere incidunt voluptates eos, quo blanditiis
-            reprehenderit, porro neque quidem quod ipsum! Facere est animi quod,
-            dolores quia cumque.
+          <p className={`${showMore ? "" : "h-22 overflow-hidden"}`}>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe
+            ipsam est ab accusantium iusto qui aperiam at fugiat amet itaque
+            omnis nesciunt necessitatibus tenetur officia sequi, consequatur
+            veniam cum. Voluptates! Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Modi impedit minus facere incidunt voluptates eos,
+            quo blanditiis reprehenderit, porro neque quidem quod ipsum! Facere
+            est animi quod, dolores quia cumque.
           </p>
-          <button className="hover:text-sky-400 hover:underline text-end">Show more</button>
         </Link>
+        <button
+          onClick={() => setShowMore((prev) => !prev)}
+          className="text-sky-400 hover:underline pb-2 text-end pr-2"
+        >
+          Show {showMore ? "less" : "more"}
+        </button>
+
         {/* Image, video, gif content */}
         <Link href={`/username/status/postId`} className="mx-auto w-full">
           <Image
