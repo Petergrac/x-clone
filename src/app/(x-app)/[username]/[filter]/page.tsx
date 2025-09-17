@@ -1,20 +1,44 @@
-import Feed, { FilteredTweet } from "@/components/Feed";
+import Feed from "@/components/Feed";
 import prisma from "@/lib/prisma";
+import Link from "next/link";
+
+export type TweetInteraction = {
+  id: string;
+  content: string;
+  authorId: string;
+  parentId: string | null;
+  createdAt: Date;
+  author: {
+    username: string;
+    avatar: string | null;
+    name?: string; // only available in liked tweets
+  };
+  _count: {
+    replies: number;
+    retweets: number;
+    likes: number;
+  };
+  likes?: {id: string}[];
+  retweets?: {id: string}[];
+  // Optional metadata to know where it came from
+  interactionType?: string;
+  likedAt?: Date; // if it's a liked tweet
+};
 
 const FilteredPosts = async ({
   params,
 }: {
   params: Promise<{ filter: string }>;
 }) => {
-  const paramsDetails = await (await params).filter;
-  let tweets;
-
-
+  const paramsDetails = (await params).filter;
+  let replies;
+  let likedTweets;
+  let interactions;
   // Check for replies
   if (paramsDetails === "replies") {
-    filteredPosts = await prisma.tweet.findMany({
+    replies = await prisma.tweet.findMany({
       where: {
-        authorId: "c6c6f621-0c0b-473b-b992-d1d6b1c86dae",
+        authorId: "07f1378f-4587-4c21-b8ee-439b43db9846",
         parentId: {
           not: null,
         },
@@ -33,16 +57,32 @@ const FilteredPosts = async ({
             likes: true,
           },
         },
+        likes: {
+          where: {
+            userId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+          },
+          select: {
+            id: true,
+          },
+        },
+        retweets: {
+          where: {
+            userId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+          },
+          select: {
+            id: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
       },
     });
   } else if (paramsDetails === "likes") {
-    filteredPosts = await prisma.like.findMany({
+    likedTweets = await prisma.like.findMany({
       where: {
         user: {
-          username: "peterdev",
+          username: "ena25",
         },
       },
       include: {
@@ -70,43 +110,53 @@ const FilteredPosts = async ({
       },
     });
   }
-
-  // Normalize the tweet
-  function normalizePost(tweet): FilteredTweet {
-  if ('tweet' in filteredPosts) {
-    const t = filteredPosts.tweet;
-    return {
-      id: t.id,
-      content: t.content,
-      authorId: t.authorId,
-      parentId: t.parentId,
-      createdAt: t.createdAt,
-      author: {
-        username: t.author.username,
-        avatar: t.author.avatar,
-      },
-      _count: t._count,
-    };
-  } else {
-    return {
-      id: post.id,
-      content: post.content,
-      authorId: post.authorId,
-      parentId: post.parentId,
-      createdAt: post.createdAt,
-      author: {
-        username: post.author.username,
-        avatar: post.author.avatar,
-      },
-      _count: post._count,
-    };
+  if (paramsDetails === "replies" && replies) {
+    // Normalize the tweet
+    interactions = [
+      ...replies.map((tweet) => ({
+        ...tweet,
+        interactionType: "reply",
+      })),
+    ];
   }
-}
+  if (paramsDetails === "likes" && likedTweets) {
+    interactions = [
+      ...likedTweets.map((like) => ({
+        ...like.tweet,
+        author: like.tweet.author,
+        _count: like.tweet._count,
+        interactionType: "like",
+        likedAt: like.createdAt,
+      })),
+    ];
+  }
+  if (!interactions || interactions.length === 0)
+    return (
+      <div className="h-[40vh] w-full flex items-center justify-center">
+        {paramsDetails === "replies" ? (
+          <p className="text-sm">
+            You haven&apos;t replied to any post.Click{" "}
+            <Link className="text-sky-500 hover:underline" href={`/`}>
+              Here
+            </Link>{" "}
+            to go back to homepage
+          </p>
+        ) : (
+          <p className="text-sm">
+            You have&apos;nt liked any post.Click
+            <Link className="text-sky-500 hover:underline" href={`/`}>
+              Here
+            </Link>{" "}
+            to go back to homepage
+          </p>
+        )}
+      </div>
+    );
   return (
     <div>
-      {filteredPosts?.map(post=>(
-        <div className="" key={post.id} >
-          <Feed post={post}/>
+      {interactions.map((tweet) => (
+        <div className="" key={tweet.id}>
+          <Feed tweet={tweet} hasLiked={paramsDetails === "likes"} />
         </div>
       ))}
     </div>

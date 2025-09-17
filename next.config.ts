@@ -15,6 +15,14 @@ const nextConfig: NextConfig = {
       {
         protocol:'https',
         hostname:'picsum.photos'
+      },
+      {
+        protocol:'https',
+        hostname:'cdn.jsdelivr.net'
+      },
+      {
+        protocol:'https',
+        hostname:'loremflickr.com'
       }
     ]
   }

@@ -50,15 +50,9 @@ const PostDetails = () => {
         </Dialog>
       </div>
       <br className="pt-15" />
-      <Feed />
+      
       <PostInput post="Reply" />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
+
     </div>
   );
 };

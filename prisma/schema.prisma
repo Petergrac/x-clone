@@ -37,7 +37,7 @@ model Tweet {
   content    String
   author     User      @relation("AuthorTweets", fields: [authorId], references: [id])
   authorId   String
-  image      String[]
+  image      String[]   @default([])
   parent     Tweet?    @relation("ReplyTo", fields: [parentId], references: [id])
   parentId   String?
   replies    Tweet[]   @relation("ReplyTo")

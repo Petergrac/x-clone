@@ -1,25 +1,39 @@
-"use client"
+"use client";
 import Feed from "@/components/Feed";
 import HomeHeader from "@/components/HomeHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { TweetInteraction } from "./[username]/[filter]/page";
 
 export default function Home() {
-  const[related, setRelated] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(true);
+  const [tweets, setTweets] = useState<TweetInteraction[] | null>(null);
+  // Fetch the data
+  useEffect(() => {
+    async function getTweets() {
+      try {
+        const res = await fetch(`/api/homefeed?feedType=${isFollowing}`);
+        const data = await res.json();
+        setTweets(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getTweets();
+  }, [isFollowing]);
+
   return (
-    <div >
+    <div>
       {/* Post Creation Section */}
-      <HomeHeader isRelated={{related, setRelated}} />
+      <HomeHeader isRelated={{ isFollowing, setIsFollowing }} />
       {/* Personalized posts */}
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
+      {tweets &&
+        tweets.map((tweet) => (
+          <Feed
+            key={tweet.id}
+            tweet={tweet}
+            hasLiked={tweet.likes && tweet.likes?.length > 0}
+          />
+        ))}
     </div>
   );
 }

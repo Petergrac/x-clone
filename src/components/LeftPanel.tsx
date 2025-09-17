@@ -23,7 +23,7 @@ const menuList = [
 const LeftBar = async () => {
   const user = await prisma.user.findUnique({
     where: {
-      username: "peterdev",
+      username: "ena25",
     },
   });
   if (!user) return null;

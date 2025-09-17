@@ -11,15 +11,15 @@ const media = [
 ];
 type UserType = {
   avatar: string | null;
+  username: string | null;
 } | null;
 
 const PostInput = ({ post, user }: { post: string; user?: UserType }) => {
-  console.log(user);
   return (
     <div>
       <div className="w-full flex items-start border-b mt-10">
         {/* AVATAR */}
-        <Link href="/username" className="p-5">
+        <Link href={`/${user?.username}`} className="p-5">
           <Image
             src={user?.avatar || "https://github.com/shadcn.png"}
             alt=""

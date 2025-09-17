@@ -9,10 +9,28 @@ const UserPosts = async () => {
   // Fetch user data
   const data = await prisma.user.findUnique({
     where: {
-      username: "peterdev",
+      username: "ena25",
     },
     include: {
-      tweets: true,
+      tweets: {
+        include: {
+          _count: {
+            select: {
+              replies: true,
+              retweets: true,
+              likes: true,
+            },
+          },
+          likes: {
+            where: {
+              userId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+            },
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
       _count: {
         select: {
           retweets: true,
@@ -22,6 +40,23 @@ const UserPosts = async () => {
       },
     },
   });
+  if (!data) {
+    return (
+      <div className="h-[40vh] flex items-center justify-center">
+        You have no posts right now.
+      </div>
+    );
+  }
+  const tweets = [
+    ...data.tweets.map((tweet) => ({
+      ...tweet,
+      author: {
+        username: data.username,
+        avatar: data.avatar,
+        name: data.name,
+      },
+    })),
+  ];
   const user = {
     username: data?.username,
     banner: data?.banner,
@@ -59,14 +94,14 @@ const UserPosts = async () => {
         <div className="">
           <UserPostNav />
         </div>
+        <div className="">
+          {tweets.map((tweet) => (
+            <div className="" key={tweet.id}>
+              <Feed tweet={tweet} />
+            </div>
+          ))}
+        </div>
       </div>{" "}
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
-      <Feed />
     </div>
   );
 };

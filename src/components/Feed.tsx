@@ -11,27 +11,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { TweetInteraction } from "@/app/(x-app)/[username]/[filter]/page";
 
-export type FilteredTweet = {
-  id: string;
-  content: string;
-  authorId: string;
-  parentId: string | null;
-  createdAt: Date;
-  author: {
-    username: string;
-    avatar: string | null;// optional in case not always available
-  };
-  _count: {
-    replies: number;
-    likes: number;
-    retweets: number;
-  };
-};
-
-const Feed = ( post: {post: filteredPostsType}) => {
+const Feed = ({
+  tweet,
+  hasLiked,
+}: {
+  tweet: TweetInteraction;
+  hasLiked?: boolean;
+}) => {
   const [showMore, setShowMore] = useState(false);
-  console.log(post.post.author.avatar)
   return (
     <div className="w-full flex items-start border-t py-3">
       {/* Profile */}
@@ -39,10 +28,7 @@ const Feed = ( post: {post: filteredPostsType}) => {
         <Avatar>
           <Avatar>
             <AvatarImage
-              src={
-                post.post.author.avatar 
-                "https://github.com/shadcn.png"
-              }
+              src={tweet.author.avatar || "https://github.com/shadcn.png"}
               alt="@shadcn"
             />
             <AvatarFallback>CN</AvatarFallback>
@@ -56,19 +42,25 @@ const Feed = ( post: {post: filteredPostsType}) => {
           <div className="flex items-center gap-2">
             {/* Username */}
             <Link
-              href={`/username`}
+              href={`/${tweet.author.username}`}
               className="text-lg font-semibold text-white/85"
             >
-              Goddie
+              {tweet.author.username}
             </Link>
             {/* tweet handle */}
-            <Link href={`/username`} className="text-gray-500">
-              @Goodie_ke
+            <Link href={`/${tweet.author.username}`} className="text-gray-500">
+              @{tweet.author.username}
             </Link>
             <p className="text-gray-500">&middot;</p>
             {/* Date */}
-            <Link href={`/username/status/postId`} className="text-gray-500">
-              Sep 8
+            <Link
+              href={`/${tweet.author.username}/status/${tweet.id}`}
+              className="text-gray-500"
+            >
+              {new Date(tweet.createdAt).toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              })}
             </Link>
           </div>
           {/* More */}
@@ -78,28 +70,30 @@ const Feed = ( post: {post: filteredPostsType}) => {
           />
         </div>
         {/* Tweet content */}
-        <Link href={`/username/status/postId`} className="text-white/85 pr-2">
-          <p className={`${showMore ? "" : "h-22 overflow-hidden"}`}>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe
-            ipsam est ab accusantium iusto qui aperiam at fugiat amet itaque
-            omnis nesciunt necessitatibus tenetur officia sequi, consequatur
-            veniam cum. Voluptates! Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Modi impedit minus facere incidunt voluptates eos,
-            quo blanditiis reprehenderit, porro neque quidem quod ipsum! Facere
-            est animi quod, dolores quia cumque.
+        <Link
+          href={`/${tweet.author.username}/status/${tweet.id}`}
+          className="text-white/85 pr-2"
+        >
+          <p className={`${showMore ? "" : "max-h-22 overflow-hidden"}`}>
+            {tweet.content}
           </p>
         </Link>
-        <button
-          onClick={() => setShowMore((prev) => !prev)}
-          className="text-sky-400 hover:underline pb-2 text-end pr-2"
-        >
-          Show {showMore ? "less" : "more"}
-        </button>
+        {tweet.content.length > 200 && (
+          <button
+            onClick={() => setShowMore((prev) => !prev)}
+            className="text-sky-400 hover:underline pb-2 text-end pr-2"
+          >
+            Show {showMore ? "less" : "more"}
+          </button>
+        )}
 
         {/* Image, video, gif content */}
-        <Link href={`/username/status/postId`} className="mx-auto w-full">
+        <Link
+          href={`/${tweet.author.username}/status/${tweet.id}`}
+          className="mx-auto w-full"
+        >
           <Image
-            src="/general/post.jpg"
+            src={"/general/post.jpg"}
             alt=""
             width={500}
             height={500}
@@ -108,16 +102,25 @@ const Feed = ( post: {post: filteredPostsType}) => {
         </Link>
         {/* Comment, repost, like, views, save, share */}
         <div className="flex text-gray-500 justify-between pr-4 mt-2">
+          {/* COMMENTS */}
           <p className="flex items-center gap-2 hover:text-sky-500 anim cursor-pointer">
-            <MessageCircle width={20} /> 213
+            <MessageCircle width={20} /> {tweet._count.replies}
           </p>
+          {/* RETWEETS */}
           <p className="flex items-center gap-2 hover:text-green-400 cursor-pointer">
             <Repeat width={20} />
-            50
+            {tweet._count.retweets}
           </p>
-          <p className="flex items-center gap-2 cursor-pointer hover:text-rose-600 anim">
+          {/* LIKES */}
+          <p
+            className={
+              hasLiked
+                ? "text-rose-500 flex items-center gap-2 cursor-pointer"
+                : "flex items-center gap-2 cursor-pointer hover:text-rose-600 anim"
+            }
+          >
             <Heart width={20} />
-            1.3k
+            {tweet._count.likes}
           </p>
           <div className="flex gap-4 ">
             <Bookmark

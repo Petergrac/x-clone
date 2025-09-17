@@ -10,7 +10,7 @@ export default async function InLayout({
 }>) {
   const data = await prisma.user.findUnique({
     where: {
-      username: "peterdev",
+      username: "ena25",
     },
     include: {
       tweets: true,
