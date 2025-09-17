@@ -8,7 +8,7 @@ export type TweetInteraction = {
   authorId: string;
   parentId: string | null;
   createdAt: string;
-  image: string[];
+  image?: string[];
   author: {
     username: string;
     avatar: string | null;
@@ -122,7 +122,13 @@ const FilteredPosts = async ({
     // Normalize the tweet
     interactions = [
       ...replies.map((tweet) => ({
-        ...tweet,
+        id: tweet.id,
+        content: tweet.content,
+        authorId: tweet.authorId,
+        parentId: tweet.parentId,
+        author: tweet.author,
+        _count: tweet._count,
+        createdAt: tweet.createdAt.toISOString(),
         interactionType: "reply",
       })),
     ];
@@ -130,7 +136,11 @@ const FilteredPosts = async ({
   if (filter === "likes" && likedTweets) {
     interactions = [
       ...likedTweets.map((like) => ({
-        ...like.tweet,
+        id: like.tweet.id,
+        content: like.tweet.content,
+        authorId: like.tweet.authorId,
+        parentId: like.tweet.parentId,
+        createdAt: like.tweet.createdAt.toISOString(),
         author: like.tweet.author,
         _count: like.tweet._count,
         interactionType: "like",
@@ -161,7 +171,7 @@ const FilteredPosts = async ({
       </div>
     );
   } else {
-    console.log('Is feed being hit')
+    console.log("Is feed being hit");
     return (
       <>
         {interactions.map((tweet) => (
