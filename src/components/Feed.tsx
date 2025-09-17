@@ -21,10 +21,14 @@ const Feed = ({
   hasLiked?: boolean;
 }) => {
   const [showMore, setShowMore] = useState(false);
+  console.log(tweet)
   return (
     <div className="w-full flex items-start border-t py-3">
       {/* Profile */}
-      <Link href={`/username`} className="p-4">
+      <Link
+        href={`/${tweet.author.username}`}
+        className="p-4"
+      >
         <Avatar>
           <Avatar>
             <AvatarImage

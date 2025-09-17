@@ -5,17 +5,22 @@ import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 export default async function InLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  params,
+}: {
+  children: Readonly<{
+    children: React.ReactNode;
+  }>;
+  params: Promise<{ username: string }>;
+}) {
+  const userName = (await params).username;
   const data = await prisma.user.findUnique({
     where: {
-      username: "ena25",
+      username: userName,
     },
     include: {
-      tweets: true,
       _count: {
         select: {
+          tweets: true,
           retweets: true,
           followers: true,
           following: true,
@@ -47,7 +52,7 @@ export default async function InLayout({
           <div className="flex flex-col justify-start">
             <p className="text-2xl font-bold">{user.username}</p>
             <p className="text-sm text-muted-foreground">
-              {data?.tweets.length} posts
+              {data?._count.tweets} posts
             </p>
           </div>
         </div>
@@ -60,7 +65,7 @@ export default async function InLayout({
           <UserPostNav />
         </div>
       </div>{" "}
-      {children}
+      {children.children}
     </div>
   );
 }

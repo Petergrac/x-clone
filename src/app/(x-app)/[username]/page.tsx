@@ -5,11 +5,18 @@ import prisma from "@/lib/prisma";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 
-const UserPosts = async () => {
+const UserPosts = async ({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) => {
+
+  const userName = (await params).username;
+  console.log(userName);
   // Fetch user data
   const data = await prisma.user.findUnique({
     where: {
-      username: "ena25",
+      username: userName,
     },
     include: {
       tweets: {
@@ -23,7 +30,9 @@ const UserPosts = async () => {
           },
           likes: {
             where: {
-              userId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+              user:{
+                username: userName,
+              }
             },
             select: {
               id: true,

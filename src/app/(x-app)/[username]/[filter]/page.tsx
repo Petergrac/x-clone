@@ -7,7 +7,8 @@ export type TweetInteraction = {
   content: string;
   authorId: string;
   parentId: string | null;
-  createdAt: Date;
+  createdAt: string;
+  image: string[];
   author: {
     username: string;
     avatar: string | null;
@@ -18,27 +19,30 @@ export type TweetInteraction = {
     retweets: number;
     likes: number;
   };
-  likes?: {id: string}[];
-  retweets?: {id: string}[];
+  likes?: { id: string }[];
+  retweets?: { id: string }[];
   // Optional metadata to know where it came from
   interactionType?: string;
-  likedAt?: Date; // if it's a liked tweet
+  likedAt?: string; // if it's a liked tweet
 };
 
 const FilteredPosts = async ({
   params,
 }: {
-  params: Promise<{ filter: string }>;
+  params: Promise<{ filter: string; username: string }>;
 }) => {
-  const paramsDetails = (await params).filter;
+  const { filter, username } = await params;
   let replies;
   let likedTweets;
   let interactions;
+
   // Check for replies
-  if (paramsDetails === "replies") {
+  if (filter === "replies") {
     replies = await prisma.tweet.findMany({
       where: {
-        authorId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+        author: {
+          username: username,
+        },
         parentId: {
           not: null,
         },
@@ -59,7 +63,9 @@ const FilteredPosts = async ({
         },
         likes: {
           where: {
-            userId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+            user: {
+              username,
+            },
           },
           select: {
             id: true,
@@ -67,7 +73,9 @@ const FilteredPosts = async ({
         },
         retweets: {
           where: {
-            userId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+            user: {
+              username,
+            },
           },
           select: {
             id: true,
@@ -78,11 +86,11 @@ const FilteredPosts = async ({
         createdAt: "desc",
       },
     });
-  } else if (paramsDetails === "likes") {
+  } else if (filter === "likes") {
     likedTweets = await prisma.like.findMany({
       where: {
         user: {
-          username: "ena25",
+          username,
         },
       },
       include: {
@@ -110,7 +118,7 @@ const FilteredPosts = async ({
       },
     });
   }
-  if (paramsDetails === "replies" && replies) {
+  if (filter === "replies" && replies) {
     // Normalize the tweet
     interactions = [
       ...replies.map((tweet) => ({
@@ -119,7 +127,7 @@ const FilteredPosts = async ({
       })),
     ];
   }
-  if (paramsDetails === "likes" && likedTweets) {
+  if (filter === "likes" && likedTweets) {
     interactions = [
       ...likedTweets.map((like) => ({
         ...like.tweet,
@@ -130,10 +138,10 @@ const FilteredPosts = async ({
       })),
     ];
   }
-  if (!interactions || interactions.length === 0)
+  if (!interactions || interactions.length === 0) {
     return (
       <div className="h-[40vh] w-full flex items-center justify-center">
-        {paramsDetails === "replies" ? (
+        {filter === "replies" ? (
           <p className="text-sm">
             You haven&apos;t replied to any post.Click{" "}
             <Link className="text-sky-500 hover:underline" href={`/`}>
@@ -152,15 +160,16 @@ const FilteredPosts = async ({
         )}
       </div>
     );
-  return (
-    <div>
-      {interactions.map((tweet) => (
-        <div className="" key={tweet.id}>
-          <Feed tweet={tweet} hasLiked={paramsDetails === "likes"} />
-        </div>
-      ))}
-    </div>
-  );
+  } else {
+    console.log('Is feed being hit')
+    return (
+      <>
+        {interactions.map((tweet) => (
+          <Feed key={tweet.id} tweet={tweet} hasLiked={filter === "likes"} />
+        ))}
+      </>
+    );
+  }
 };
 
 export default FilteredPosts;
