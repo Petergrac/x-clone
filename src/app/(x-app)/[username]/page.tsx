@@ -12,7 +12,6 @@ const UserPosts = async ({
 }) => {
 
   const userName = (await params).username;
-  console.log(userName);
   // Fetch user data
   const data = await prisma.user.findUnique({
     where: {

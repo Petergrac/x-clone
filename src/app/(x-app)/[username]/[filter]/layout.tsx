@@ -7,9 +7,7 @@ export default async function InLayout({
   children,
   params,
 }: {
-  children: Readonly<{
-    children: React.ReactNode;
-  }>;
+  children: Readonly<React.ReactNode>;
   params: Promise<{ username: string }>;
 }) {
   const userName = (await params).username;
@@ -65,7 +63,7 @@ export default async function InLayout({
           <UserPostNav />
         </div>
       </div>{" "}
-      {children.children}
+      {children}
     </div>
   );
 }

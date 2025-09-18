@@ -2,29 +2,6 @@ import Feed from "@/components/Feed";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 
-export type TweetInteraction = {
-  id: string;
-  content: string;
-  authorId: string;
-  parentId: string | null;
-  createdAt: string;
-  image?: string[];
-  author: {
-    username: string;
-    avatar: string | null;
-    name?: string; // only available in liked tweets
-  };
-  _count: {
-    replies: number;
-    retweets: number;
-    likes: number;
-  };
-  likes?: { id: string }[];
-  retweets?: { id: string }[];
-  // Optional metadata to know where it came from
-  interactionType?: string;
-  likedAt?: string; // if it's a liked tweet
-};
 
 const FilteredPosts = async ({
   params,
@@ -128,7 +105,7 @@ const FilteredPosts = async ({
         parentId: tweet.parentId,
         author: tweet.author,
         _count: tweet._count,
-        createdAt: tweet.createdAt.toISOString(),
+        createdAt: tweet.createdAt,
         interactionType: "reply",
       })),
     ];
@@ -140,7 +117,7 @@ const FilteredPosts = async ({
         content: like.tweet.content,
         authorId: like.tweet.authorId,
         parentId: like.tweet.parentId,
-        createdAt: like.tweet.createdAt.toISOString(),
+        createdAt: like.tweet.createdAt,
         author: like.tweet.author,
         _count: like.tweet._count,
         interactionType: "like",
@@ -171,7 +148,6 @@ const FilteredPosts = async ({
       </div>
     );
   } else {
-    console.log("Is feed being hit");
     return (
       <>
         {interactions.map((tweet) => (

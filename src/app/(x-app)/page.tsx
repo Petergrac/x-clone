@@ -2,8 +2,7 @@
 import Feed from "@/components/Feed";
 import HomeHeader from "@/components/HomeHeader";
 import { useEffect, useState } from "react";
-import { TweetInteraction } from "./[username]/[filter]/page";
-
+import { TweetInteraction } from "@/types/tweet";
 export default function Home() {
   const [isFollowing, setIsFollowing] = useState(true);
   const [tweets, setTweets] = useState<TweetInteraction[] | null>(null);

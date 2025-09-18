@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { TweetInteraction } from "@/app/(x-app)/[username]/[filter]/page";
+import { TweetInteraction } from "@/types/tweet";
 
 const Feed = ({
   tweet,
@@ -21,7 +21,7 @@ const Feed = ({
   hasLiked?: boolean;
 }) => {
   const [showMore, setShowMore] = useState(false);
-  console.log(tweet)
+  
   return (
     <div className="w-full flex items-start border-t py-3">
       {/* Profile */}

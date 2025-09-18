@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Earth,  UserCircle2Icon } from "lucide-react";
-const PostFilter = () => {
+const TweetFilter = () => {
   return (
     <Select>
       <SelectTrigger className="outline-none border-0 bg-black">
@@ -58,4 +58,4 @@ const PostFilter = () => {
   );
 };
 
-export default PostFilter;
+export default TweetFilter;

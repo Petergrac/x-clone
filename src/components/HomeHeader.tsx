@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import PostInput from "./PostInput";
+import TweetInput from "./TweetInput";
 
 type UserType = {
   avatar: string | null;
@@ -55,7 +55,7 @@ const HomeHeader = ({
         </Link>
       </nav>
       {/* POST INPUT */}
-      {user && <PostInput post="Post" user={user} />}
+      {user && <TweetInput tweetType="Post" user={user} />}
     </div>
   );
 };
