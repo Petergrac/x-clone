@@ -10,7 +10,6 @@ const UserPosts = async ({
 }: {
   params: Promise<{ username: string }>;
 }) => {
-
   const userName = (await params).username;
   // Fetch user data
   const data = await prisma.user.findUnique({
@@ -29,24 +28,24 @@ const UserPosts = async ({
           },
           likes: {
             where: {
-              user:{
-                username: "ena25",
-              }
+              user: {
+                username: "nicholas78",
+              },
             },
             select: {
               id: true,
             },
           },
-          retweets:{
-            where:{
-              user:{
-                username: 'ena25'
-              }
+          retweets: {
+            where: {
+              user: {
+                username: "nicholas78",
+              },
             },
-            select:{
-              id: true
-            }
-          }
+            select: {
+              id: true,
+            },
+          },
         },
       },
       _count: {

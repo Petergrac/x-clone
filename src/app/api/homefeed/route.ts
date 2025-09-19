@@ -9,14 +9,13 @@ export async function GET(request: Request) {
   const searchParams = url.searchParams;
   const isFollwing = searchParams.get("feedType");
 
-
   let targetUserIds: string[] = [];
 
   if (!isFollwing) {
     // Find all users following you
     const whoFollowsMe = await prisma.follow.findMany({
       where: {
-        followingId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+        followingId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
       },
       select: {
         followerId: true,
@@ -28,7 +27,7 @@ export async function GET(request: Request) {
     //Get all ids of those that you follow
     const whoDoIFollow = await prisma.follow.findMany({
       where: {
-        followerId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+        followerId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
       },
       select: {
         followingId: true,
@@ -41,7 +40,7 @@ export async function GET(request: Request) {
     const tweets = await prisma.tweet.findMany({
       where: {
         authorId: {
-          not: "07f1378f-4587-4c21-b8ee-439b43db9846", // Tweets that are not yours
+          not: "e56632d3-8b56-40d2-a576-178afbdf05d1", // Tweets that are not yours
         },
         parentId: null,
         // Include posts for those who follow you
@@ -56,6 +55,7 @@ export async function GET(request: Request) {
         authorId: true,
         parentId: true,
         createdAt: true,
+        image: true,
         author: {
           select: {
             username: true,
@@ -72,7 +72,7 @@ export async function GET(request: Request) {
         },
         likes: {
           where: {
-            userId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+            userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
           },
           select: {
             id: true,
@@ -80,7 +80,7 @@ export async function GET(request: Request) {
         },
         retweets: {
           where: {
-            userId: "07f1378f-4587-4c21-b8ee-439b43db9846",
+            userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
           },
           select: {
             id: true,
@@ -91,7 +91,7 @@ export async function GET(request: Request) {
         createdAt: "desc",
       },
     });
-    revalidatePath('/api/homefeed')
+    revalidatePath("/api/homefeed");
     return Response.json(tweets);
   } catch (error) {
     console.log(error);

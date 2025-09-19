@@ -8,25 +8,21 @@ import {
   Share,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { TweetInteraction } from "@/types/tweet";
+import Image from "./Image";
 
-const Feed = ({
-  tweet,
-  hasLiked,
-}: {
-  tweet: TweetInteraction;
-  hasLiked?: boolean;
-}) => {
+const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
   const [showMore, setShowMore] = useState(false);
   return (
     <div className="border-t">
-      <div className="px-5 pt-2 text-sm  text-gray-400 flex items-center gap-2">
-        <Repeat size={17} />
-        <p className="text-white/85">Reposted</p>
-      </div>
+      {tweet.retweets.length > 0 && (
+        <div className="px-5 pt-2 text-sm  text-gray-400 flex items-center gap-2">
+          <Repeat size={17} />
+          <p className="text-white/85">You Reposted</p>
+        </div>
+      )}
       <div className="w-full flex items-start py-3">
         {/* Profile */}
         <Link href={`/${tweet.author.username}`} className="p-4">
@@ -100,11 +96,11 @@ const Feed = ({
             className="mx-auto w-full"
           >
             <Image
-              src={"/general/post.jpg"}
-              alt=""
+              src={(tweet.image && tweet.image[0]) || "/general/post.jpg"}
               width={500}
               height={500}
-              className="object-center rounded-2xl "
+              alt=""
+              tr={true}
             />
           </Link>
           {/* Comment, repost, like, views, save, share */}

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "./Image"
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
@@ -16,14 +16,14 @@ const menuList = [
   { id: 6, name: "Jobs", link: "/", icon: "job.svg" },
   { id: 7, name: "Communities", link: "/", icon: "community.svg" },
   { id: 8, name: "Premium", link: "/", icon: "logo.svg" },
-  { id: 9, name: "Profile", link: "/ena25", icon: "profile.svg" },
+  { id: 9, name: "Profile", link: "/nicholas78", icon: "profile.svg" },
   { id: 10, name: "More", link: "/", icon: "more.svg" },
 ];
 
 const LeftBar = async () => {
   const user = await prisma.user.findUnique({
     where: {
-      username: "ena25",
+      username: "nicholas78",
     },
   });
   if (!user) return null;
@@ -61,9 +61,10 @@ const LeftBar = async () => {
                 key={item.id}
               >
                 <Image
-                  src={`/icons/${item.icon}`}
+                  src={`icons/${item.icon}`}
                   width={24}
                   height={24}
+                  tr={false}
                   alt=""
                 />
                 <p className="hidden xl:inline text-white/75">{item.name}</p>
@@ -76,7 +77,7 @@ const LeftBar = async () => {
           href="/"
           className=" bg-white/75 w-12 px-2 h-12 text-black rounded-full xl:hidden  flex items-center justify-center"
         >
-          <Image src="/icons/post.svg" width={27} height={27} alt="" />
+          <Image src="/icons/post.svg" width={27} height={27} alt=""/>
         </Link>
         <Link
           href="/"

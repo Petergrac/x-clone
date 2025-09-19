@@ -6,7 +6,7 @@ const RightPanel = async () => {
   const followers = await prisma.follow.findMany({
     where: {
       following: {
-        username: "ena25", // target user
+        username: "nicholas78", // target user
       },
     },
     select: {
@@ -96,7 +96,9 @@ const RightPanel = async () => {
                 <Avatar>
                   <AvatarImage
                     width={30}
-                    src={user.follower.avatar || "https://github.com/shadcn.png"}
+                    src={
+                      user.follower.avatar || "https://github.com/shadcn.png"
+                    }
                     alt="@shadcn"
                   />
                   <AvatarFallback>CN</AvatarFallback>
@@ -104,7 +106,9 @@ const RightPanel = async () => {
                 {/* USER-DETAILS */}
                 <div className="flex justify-start flex-col items-start">
                   <h3 className="font-bold">{user.follower.name}</h3>
-                  <p className="text-muted-foreground">@{user.follower.username}</p>
+                  <p className="text-muted-foreground">
+                    @{user.follower.username}
+                  </p>
                 </div>
               </div>
               <button className="text-black bg-white/95 font-bold rounded-full h-fit py-2 px-3">

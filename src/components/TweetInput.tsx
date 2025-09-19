@@ -1,8 +1,9 @@
 "use client";
 import TweetFilter from "@/components/TweetFilter";
-import Image from "next/image";
+import Image from "./Image";
 import Link from "next/link";
 import { useState } from "react";
+import UploadExample from "./ImageUpload";
 const media = [
   "/icons/image.svg",
   "/icons/gif.svg",
@@ -29,13 +30,14 @@ const TweetInput = ({
       <div className="w-full flex items-start border-t mt-10">
         {/* AVATAR */}
         <Link href={`/${user?.username}`} className="p-5">
-          <Image
-            src={user?.avatar || "https://github.com/shadcn.png"}
-            alt=""
-            width={44}
-            height={44}
-            className="rounded-full overflow-hidden"
-          />
+          <div className="rounded-full overflow-hidden">
+            <Image
+              src={user?.avatar || "https://github.com/shadcn.png"}
+              alt=""
+              width={44}
+              height={44}
+            />
+          </div>
         </Link>
         {/* SECTION 2 */}
         <div className="flex grow flex-col">
@@ -81,21 +83,12 @@ const TweetInput = ({
                       {icon === "/icons/image.svg" ? (
                         <label htmlFor="image">
                           <Image src={icon} width={24} height={24} alt={icon} />
-                          <input
-                            type="file"
-                            className="hidden"
-                            name="images"
-                            id="image"
-                          />
+                          <UploadExample />
                         </label>
                       ) : (
-                        <Image
-                          className="hover:bg-sky-500/55 rounded-full anim"
-                          src={icon}
-                          alt=""
-                          width={24}
-                          height={24}
-                        />
+                        <div className="hover:bg-sky-500/55 rounded-full anim">
+                          <Image src={icon} alt="" width={24} height={24} />
+                        </div>
                       )}
                     </div>
                   ))}

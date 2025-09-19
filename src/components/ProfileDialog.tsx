@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import Image from "next/image";
+import Image from "./Image";
 import { ScrollArea } from "./ui/scroll-area";
 const ProfileDialog = () => {
   return (
@@ -23,20 +23,22 @@ const ProfileDialog = () => {
           <div className="relative mb-20">
             <div className="aspect-[6/2] overflow-hidden relative mt-2">
               <Image
-                className="object-center"
+                width={600}
+                height={200}
                 src="/general/banner.jpeg"
                 alt=""
-                fill
+                tr={true}
               />
             </div>
             {/* USER AVATAR */}
-            <Image
-              className="object-center absolute left-4 -bottom-[72px] border-5 border-black aspect-square rounded-full"
-              src="/general/profile.jpg"
-              alt=""
-              width={133}
-              height={133}
-            />
+            <div className="object-center absolute left-4 -bottom-[72px] border-5 border-black aspect-square rounded-full">
+              <Image
+                src="/general/profile.jpg"
+                alt=""
+                width={133}
+                height={133}
+              />
+            </div>
           </div>
           {/* Name Bio Location, Website Birth date */}
           <div className="flex flex-col gap-5">
@@ -99,7 +101,9 @@ const ProfileDialog = () => {
           </div>
         </ScrollArea>
         <DialogFooter>
-          <button className="py-2 px-4 font-bold bg-white/95 text-black rounded-full">Save</button>
+          <button className="py-2 px-4 font-bold bg-white/95 text-black rounded-full">
+            Save
+          </button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

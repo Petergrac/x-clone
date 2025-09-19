@@ -40,7 +40,7 @@ const FilteredPosts = async ({
         likes: {
           where: {
             user: {
-              username,
+              username: "nicholas78",
             },
           },
           select: {
@@ -50,7 +50,7 @@ const FilteredPosts = async ({
         retweets: {
           where: {
             user: {
-              username,
+              username: "nicholas78",
             },
           },
           select: {
@@ -99,7 +99,7 @@ const FilteredPosts = async ({
             retweets: {
               where: {
                 user: {
-                  username,
+                  username: "nicholas78",
                 },
               },
               select: {
@@ -122,6 +122,7 @@ const FilteredPosts = async ({
         content: tweet.content,
         authorId: tweet.authorId,
         parentId: tweet.parentId,
+        image: tweet.image,
         author: tweet.author,
         _count: tweet._count,
         likes: tweet.likes,
@@ -139,6 +140,7 @@ const FilteredPosts = async ({
         authorId: like.tweet.authorId,
         parentId: like.tweet.parentId,
         createdAt: like.tweet.createdAt,
+        image: like.tweet.image,
         author: like.tweet.author,
         likes: like.tweet.likes,
         retweets: like.tweet.retweets,
@@ -174,7 +176,7 @@ const FilteredPosts = async ({
     return (
       <>
         {interactions.map((tweet) => (
-          <Feed key={tweet.id} tweet={tweet} hasLiked={filter === "likes"} />
+          <Feed key={tweet.id} tweet={tweet} />
         ))}
       </>
     );

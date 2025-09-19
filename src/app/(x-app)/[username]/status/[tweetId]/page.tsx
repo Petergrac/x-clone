@@ -41,14 +41,14 @@ const PostDetails = async ({
       likes: {
         where: {
           user: {
-            username: "ena25",
+            username: "nicholas78",
           },
         },
       },
       retweets: {
         where: {
           user: {
-            username: "ena25",
+            username: "nicholas78",
           },
         },
         select: {
@@ -81,14 +81,14 @@ const PostDetails = async ({
       likes: {
         where: {
           user: {
-            username: "ena25",
+            username: "nicholas78",
           },
         },
       },
       retweets: {
         where: {
           user: {
-            username: "ena25",
+            username: "nicholas78",
           },
         },
         select: {

@@ -4,7 +4,7 @@ export type TweetInteraction = {
   authorId: string;
   parentId: string | null;
   createdAt: Date;
-  image?: string[];
+  image: string[];
   author: {
     username: string;
     avatar: string | null;

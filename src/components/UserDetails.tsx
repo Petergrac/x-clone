@@ -1,5 +1,5 @@
 import { Calendar1Icon } from "lucide-react";
-import Image from "next/image";
+import Image from "./Image";
 import ProfileDialog from "./ProfileDialog";
 
 type userType = {
@@ -18,22 +18,23 @@ const UserDetails = (userDetails: { userDetails: userType }) => {
     <div>
       {/* BANNER */}
       <div className="relative">
-        <div className="aspect-[6/2] overflow-hidden relative mt-3 w-full">
+        <div className="overflow-hidden relative mt-3 w-full">
           <Image
-            className="object-center"
             src={userDetails.userDetails.banner || "/general/banner.jpeg"}
             alt=""
-            fill
+            width={600}
+            height={200}
           />
         </div>
         {/* USER AVATAR */}
-        <Image
-          className="object-center absolute left-4 -bottom-[72px] border-5 border-black aspect-square rounded-full"
-          src={userDetails.userDetails.avatar || "/general/profile.jpg"}
-          alt=""
-          width={133}
-          height={133}
-        />
+        <div className="object-center absolute left-4 -bottom-[72px] border-5 border-black aspect-square overflow-hidden rounded-full">
+          <Image
+            src={userDetails.userDetails.avatar || "/general/profile.jpg"}
+            alt=""
+            width={133}
+            height={133}
+          />
+        </div>
       </div>
       {/* EDIT BUTTON OR SUBSCRIBE */}
       <div className="flex justify-end w-full">
