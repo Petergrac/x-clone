@@ -38,6 +38,23 @@ const PostDetails = async ({
           likes: true,
         },
       },
+      likes: {
+        where: {
+          user: {
+            username: "ena25",
+          },
+        },
+      },
+      retweets: {
+        where: {
+          user: {
+            username: "ena25",
+          },
+        },
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
@@ -61,6 +78,23 @@ const PostDetails = async ({
           likes: true,
         },
       },
+      likes: {
+        where: {
+          user: {
+            username: "ena25",
+          },
+        },
+      },
+      retweets: {
+        where: {
+          user: {
+            username: "ena25",
+          },
+        },
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
@@ -73,7 +107,7 @@ const PostDetails = async ({
   return (
     <div>
       {/* Page bar */}
-      <div className="flex w-full justify-between sticky top-0  items-center bg-black/50 px-4 py-4">
+      <div className="flex w-full justify-between sticky top-0 z-10  items-center bg-black/50 px-4 py-4">
         <div className="justify-start flex items-center gap-5">
           <Link href={`/`}>
             <ArrowLeft />
@@ -89,11 +123,13 @@ const PostDetails = async ({
             <DialogHeader>
               <DialogTitle className="text-base">
                 Replying to{" "}
-                <span className="text-gray-500 text-sm">@{mainTweet.author.username}</span>
+                <span className="text-gray-500 text-sm">
+                  @{mainTweet.author.username}
+                </span>
               </DialogTitle>
               <DialogDescription className="min-h-10 max-h-32 overflow-hidden text-start">
                 {/* Make sure you  */}
-              {mainTweet.content}
+                {mainTweet.content}
               </DialogDescription>
             </DialogHeader>
             <TweetInput tweetType="Reply" />

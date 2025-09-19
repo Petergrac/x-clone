@@ -30,13 +30,23 @@ const UserPosts = async ({
           likes: {
             where: {
               user:{
-                username: userName,
+                username: "ena25",
               }
             },
             select: {
               id: true,
             },
           },
+          retweets:{
+            where:{
+              user:{
+                username: 'ena25'
+              }
+            },
+            select:{
+              id: true
+            }
+          }
         },
       },
       _count: {
@@ -68,13 +78,13 @@ const UserPosts = async ({
   const user = {
     username: data?.username,
     banner: data?.banner,
+    name: data.name,
     bio: data?.bio,
     avatar: data?.avatar,
     createdAt: data?.createdAt,
     followers: data?._count.followers,
     following: data?._count.following,
   };
-
   return (
     <div>
       <div className="">
@@ -88,7 +98,7 @@ const UserPosts = async ({
           </Link>
           {/* Name & Number of posts */}
           <div className="flex flex-col justify-start">
-            <p className="text-2xl font-bold">{data?.username || "ℕΣΜΣЅℐЅ"}</p>
+            <p className="text-2xl font-bold">{data?.name || "ℕΣΜΣЅℐЅ"}</p>
             <p className="text-sm text-muted-foreground">
               {data?.tweets.length} posts
             </p>

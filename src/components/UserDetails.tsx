@@ -4,6 +4,7 @@ import ProfileDialog from "./ProfileDialog";
 
 type userType = {
   username: string | undefined;
+  name: string;
   banner: string | null | undefined;
   avatar: string | null | undefined;
   createdAt: Date | undefined;
@@ -44,7 +45,7 @@ const UserDetails = (userDetails: { userDetails: userType }) => {
         {/* USERNAME & TWEET HANDLE */}
         <div className="flex flex-col justify-start">
           <p className="font-bold text-2xl">
-            {userDetails.userDetails.username || "ℕΣΜΣЅℐЅ"}
+            {userDetails.userDetails.name || "ℕΣΜΣЅℐЅ"}
           </p>
           <p className="text-sm text-muted-foreground">
             @{userDetails.userDetails.username}

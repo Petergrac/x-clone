@@ -2,7 +2,6 @@ import Feed from "@/components/Feed";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 
-
 const FilteredPosts = async ({
   params,
 }: {
@@ -87,6 +86,26 @@ const FilteredPosts = async ({
                 likes: true,
               },
             },
+            likes: {
+              where: {
+                user: {
+                  username,
+                },
+              },
+              select: {
+                id: true,
+              },
+            },
+            retweets: {
+              where: {
+                user: {
+                  username,
+                },
+              },
+              select: {
+                id: true,
+              },
+            },
           },
         },
       },
@@ -105,6 +124,8 @@ const FilteredPosts = async ({
         parentId: tweet.parentId,
         author: tweet.author,
         _count: tweet._count,
+        likes: tweet.likes,
+        retweets: tweet.retweets,
         createdAt: tweet.createdAt,
         interactionType: "reply",
       })),
@@ -119,6 +140,8 @@ const FilteredPosts = async ({
         parentId: like.tweet.parentId,
         createdAt: like.tweet.createdAt,
         author: like.tweet.author,
+        likes: like.tweet.likes,
+        retweets: like.tweet.retweets,
         _count: like.tweet._count,
         interactionType: "like",
         likedAt: like.createdAt,

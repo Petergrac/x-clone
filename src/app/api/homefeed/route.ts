@@ -47,11 +47,6 @@ export async function GET(request: Request) {
         // Include posts for those who follow you
         OR: [
           { authorId: { in: targetUserIds } }, // All posts for those who follow you
-          {
-            authorId: {
-              notIn: [...targetUserIds , "07f1378f-4587-4c21-b8ee-439b43db9846"], // Other posts from those who don't follow you
-            },
-          },
         ],
       },
       // Fields to include
@@ -95,7 +90,6 @@ export async function GET(request: Request) {
       orderBy: {
         createdAt: "desc",
       },
-      take: 20,
     });
     revalidatePath('/api/homefeed')
     return Response.json(tweets);
