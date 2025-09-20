@@ -13,10 +13,7 @@ export default function Image({
   alt: string;
   tr?: boolean;
 }) {
-    const data = {src,alt, height,width,tr};
-    if(data.src.startsWith('/')){
-        console.log(data.src)
-    }
+  const data = { src, alt, height, width, tr };
   return (
     <ImageKitProvider urlEndpoint="https://ik.imagekit.io/apostle4dvpgw855fxx">
       <IKImage
@@ -24,7 +21,9 @@ export default function Image({
         width={data.width}
         height={data.height}
         alt={data.alt}
-        transformation={[{width: data.width, height: data.height, quality: 80}]}
+        transformation={[
+          { width: data.width, height: data.height, quality: 80 },
+        ]}
       />
     </ImageKitProvider>
   );
