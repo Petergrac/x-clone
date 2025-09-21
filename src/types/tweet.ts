@@ -8,6 +8,7 @@ export type TweetInteraction = {
   isSensitive: boolean;
   author: {
     username: string;
+    id: string;
     avatar: string | null;
     name?: string; // only available in liked tweets
   };

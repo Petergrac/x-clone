@@ -1,10 +1,15 @@
 // File: app/api/upload-auth/route.ts
+import { auth } from "@clerk/nextjs/server"
 import { getUploadAuthParams } from "@imagekit/next/server"
 
 export async function GET() {
     // Your application logic to authenticate the user
     // For example, you can check if the user is logged in or has the necessary permissions
     // If the user is not authenticated, you can return an error response
+    const {userId} = await auth();
+    if(!userId){
+        return "You are not authenticated"
+    }
 
     const { token, expire, signature } = getUploadAuthParams({
         privateKey: process.env.IMAGEKIT_PRIVATE_KEY as string, // Never expose this on client side

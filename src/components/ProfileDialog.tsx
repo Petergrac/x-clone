@@ -1,3 +1,4 @@
+"use client";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +9,21 @@ import {
 } from "@/components/ui/dialog";
 import Image from "./Image";
 import { ScrollArea } from "./ui/scroll-area";
+import { useEffect } from "react";
+
 const ProfileDialog = () => {
+  useEffect(() => {
+    const handleUserDetails = async () => {
+      try {
+        const res = await fetch("/api/user-details");
+        const userDetails = await res.json();
+        console.log(userDetails);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleUserDetails();
+  }, []);
   return (
     <Dialog>
       <DialogTrigger className="py-2 px-4 font-bold border-1 mt-4 rounded-full anim hover:bg-gray-800 border-gray-200 mr-3">

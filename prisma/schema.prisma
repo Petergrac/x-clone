@@ -18,9 +18,12 @@ datasource db {
 model User {
   id        String    @id @default(uuid())
   username  String    @unique
+  clerkId   String    @unique @default(uuid())
   email     String    @unique
   name      String
   bio       String?
+  location  String?
+  website   String?
   avatar    String?
   banner    String?
   tweets    Tweet[]   @relation("AuthorTweets")

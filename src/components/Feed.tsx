@@ -62,7 +62,7 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
         setRetweetCount(retweetCount + 1);
         setRetweeted(true);
       }
-      await reTweet(tweet.id, "");
+      await reTweet(tweet.id);
     }
   };
   // ============================ Handle likes =========================
@@ -75,9 +75,10 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
         setLikesCount(likesCount + 1);
         setHasLiked(true);
       }
-      await likeActions(tweet.id, "");
+      await likeActions(tweet.id);
     }
   };
+
   return (
     <div className="border-t">
       {isRetweeted && (

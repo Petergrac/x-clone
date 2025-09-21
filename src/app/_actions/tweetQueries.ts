@@ -2,6 +2,7 @@
 
 import TweetFilter from "@/components/TweetFilter";
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
 /**
@@ -16,6 +17,10 @@ export async function CreateTweet(
   sensitivity: boolean,
   content?: string
 ) {
+  const { userId } = await auth();
+  if (!userId) {
+    return "User not authenticated";
+  }
   const newTweet = await prisma.tweet.create({
     data: {
       content: content,
@@ -23,13 +28,16 @@ export async function CreateTweet(
       isSensitive: sensitivity,
       author: {
         connect: {
-          username: "nicholas78",
+          clerkId: userId,
         },
       },
     },
+    select: {
+      id: true,
+    },
   });
-  console.log(newTweet);
-  return newTweet;
+  revalidatePath(`/`);
+  return !!newTweet;
 }
 
 /**
@@ -39,17 +47,24 @@ export async function CreateTweet(
  * @returns
  */
 export async function deleteTweet(tweetId: string) {
+  const { userId } = await auth();
+  if (!userId) {
+    return "User not authenticated";
+  }
   // You need to make sure that you include your id or name here
   const deletedTweet = await prisma.tweet.delete({
     where: {
       id: tweetId,
       author: {
-        username: "nicholas78",
+        clerkId: userId,
       },
+    },
+    select: {
+      id: true,
     },
   });
   revalidatePath(`/username`);
-  return deletedTweet;
+  return !!deletedTweet;
 }
 /**
  *  =====================
@@ -59,12 +74,25 @@ export async function deleteTweet(tweetId: string) {
  * @param userId
  * @returns
  */
-export async function reTweet(originalId: string, userId: string) {
+export async function reTweet(originalId: string) {
+  const { userId } = await auth();
+  if (!userId) {
+    return "User not authenticated";
+  }
+  const data = await prisma.user.findUnique({
+    where: {
+      clerkId: userId,
+    },
+    select: {
+      id: true,
+    },
+  });
+  if (!data) return "There is no such user";
   // Check if the retweet is in the record
   const hasRetweeted = await prisma.retweet.findUnique({
     where: {
       userId_tweetId: {
-        userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+        userId: data.id,
         tweetId: originalId,
       },
     },
@@ -73,7 +101,7 @@ export async function reTweet(originalId: string, userId: string) {
   if (!hasRetweeted) {
     const retweet = await prisma.retweet.create({
       data: {
-        userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+        userId: data.id,
         tweetId: originalId,
       },
     });
@@ -83,7 +111,7 @@ export async function reTweet(originalId: string, userId: string) {
     const deletedTweet = await prisma.retweet.delete({
       where: {
         userId_tweetId: {
-          userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+          userId,
           tweetId: originalId,
         },
       },
@@ -93,12 +121,26 @@ export async function reTweet(originalId: string, userId: string) {
   }
 }
 
-export async function likeActions(tweetId: string, userId: string) {
+export async function likeActions(tweetId: string) {
   // Check if the user has liked the tweet
+  const { userId } = await auth();
+  if (!userId) {
+    return "User not authenticated";
+  }
+  const data = await prisma.user.findUnique({
+    where: {
+      clerkId: userId,
+    },
+    select: {
+      id: true,
+    },
+  });
+  if (!data) return "There is no such user";
+
   const hasLiked = await prisma.like.findUnique({
     where: {
       userId_tweetId: {
-        userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+        userId: data.id,
         tweetId,
       },
     },
@@ -107,7 +149,7 @@ export async function likeActions(tweetId: string, userId: string) {
   if (!hasLiked) {
     const newLike = await prisma.like.create({
       data: {
-        userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+        userId: data.id,
         tweetId,
       },
       select: {
@@ -119,7 +161,7 @@ export async function likeActions(tweetId: string, userId: string) {
     const deleteLike = await prisma.like.delete({
       where: {
         userId_tweetId: {
-          userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+          userId: data.id,
           tweetId,
         },
       },

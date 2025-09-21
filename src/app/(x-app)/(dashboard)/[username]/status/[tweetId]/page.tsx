@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -19,6 +20,12 @@ const PostDetails = async ({
 }) => {
   // Find this specific tweet
   const { tweetId } = await params;
+
+  // Get current user Id
+  const {userId} = await auth();
+  if(!userId){
+    throw new Error("Could not authenticate the user")
+  }
   const mainTweet = await prisma.tweet.findUnique({
     where: {
       id: tweetId,
@@ -29,6 +36,7 @@ const PostDetails = async ({
           username: true,
           avatar: true,
           name: true,
+          id: true
         },
       },
       _count: {
@@ -41,14 +49,14 @@ const PostDetails = async ({
       likes: {
         where: {
           user: {
-            username: "nicholas78",
+           clerkId: userId,
           },
         },
       },
       retweets: {
         where: {
           user: {
-            username: "nicholas78",
+         clerkId: userId,
           },
         },
         select: {
@@ -69,6 +77,7 @@ const PostDetails = async ({
           username: true,
           avatar: true,
           name: true,
+          id: true
         },
       },
       _count: {
@@ -81,14 +90,14 @@ const PostDetails = async ({
       likes: {
         where: {
           user: {
-            username: "nicholas78",
+            clerkId: userId,
           },
         },
       },
       retweets: {
         where: {
           user: {
-            username: "nicholas78",
+             clerkId: userId,
           },
         },
         select: {

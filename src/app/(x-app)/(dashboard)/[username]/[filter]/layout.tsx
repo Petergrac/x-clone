@@ -33,6 +33,7 @@ export default async function InLayout({
     username: data?.username,
     banner: data?.banner,
     name: data.name,
+    id: data.id,
     bio: data?.bio,
     avatar: data?.avatar,
     createdAt: data?.createdAt,

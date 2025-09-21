@@ -1,12 +1,17 @@
 import { SearchIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
 const RightPanel = async () => {
+  const {userId} = await auth();
+  if(!userId){
+    return "You must be authenticated"
+  }
   const followers = await prisma.follow.findMany({
     where: {
       following: {
-        username: "nicholas78", // target user
+        clerkId: userId
       },
     },
     select: {

@@ -1,16 +1,33 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
 export async function replyTweet(parentId: string, content: string) {
-    const reply = await prisma.tweet.create({
-        data:{
-            content: content,
-            parentId: parentId,
-            authorId: "e56632d3-8b56-40d2-a576-178afbdf05d1"
-        }
-    });
-    revalidatePath(`/[username]/status/[tweetId]`)
-    return reply;
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("User on authenticated");
+  }
+  const id = await prisma.user.findUnique({
+    where: {
+      clerkId: userId,
+    },
+    select: {
+      id: true,
+      username: true
+    },
+  });
+  if (!id) {
+    return "No id found";
+  }
+  const reply = await prisma.tweet.create({
+    data: {
+      content: content,
+      parentId: parentId,
+      authorId: id.id,
+    },
+  });
+  revalidatePath(`/${id.username}/status/${id.id}`);
+  return reply;
 }

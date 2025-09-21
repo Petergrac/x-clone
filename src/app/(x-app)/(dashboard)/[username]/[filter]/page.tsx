@@ -1,5 +1,6 @@
 import Feed from "@/components/Feed";
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 
 const FilteredPosts = async ({
@@ -12,6 +13,10 @@ const FilteredPosts = async ({
   let likedTweets;
   let interactions;
 
+  const {userId} = await auth()
+  if(!userId){
+    throw new Error("Could not find user id")
+  }
   // Check for replies
   if (filter === "replies") {
     replies = await prisma.tweet.findMany({
@@ -28,6 +33,7 @@ const FilteredPosts = async ({
           select: {
             username: true,
             avatar: true,
+            id: true
           },
         },
         _count: {
@@ -40,7 +46,7 @@ const FilteredPosts = async ({
         likes: {
           where: {
             user: {
-              username: "nicholas78",
+              clerkId: userId,
             },
           },
           select: {
@@ -50,7 +56,7 @@ const FilteredPosts = async ({
         retweets: {
           where: {
             user: {
-              username: "nicholas78",
+               clerkId: userId,
             },
           },
           select: {
@@ -77,6 +83,7 @@ const FilteredPosts = async ({
                 username: true,
                 name: true,
                 avatar: true,
+                id: true
               },
             },
             _count: {
@@ -99,7 +106,7 @@ const FilteredPosts = async ({
             retweets: {
               where: {
                 user: {
-                  username: "nicholas78",
+                  clerkId: userId,
                 },
               },
               select: {

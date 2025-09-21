@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
 export async function GET(request: Request) {
@@ -9,13 +10,21 @@ export async function GET(request: Request) {
   const searchParams = url.searchParams;
   const isFollowing = searchParams.get("feedType");
 
+  const {userId} = await auth();
+  console.log(userId);
+
+  if(!userId){
+    return;
+  }
   let targetUserIds: string[] = [];
 
   if (!isFollowing) {
     // Find all users following you
     const whoFollowsMe = await prisma.follow.findMany({
       where: {
-        followingId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+        following:{
+          clerkId: userId
+        }
       },
       select: {
         followerId: true,
@@ -27,7 +36,9 @@ export async function GET(request: Request) {
     //Get all ids of those that you follow
     const whoDoIFollow = await prisma.follow.findMany({
       where: {
-        followerId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+        follower:{
+          clerkId: userId
+        }
       },
       select: {
         followingId: true,
@@ -58,6 +69,7 @@ export async function GET(request: Request) {
             username: true,
             avatar: true,
             name: true,
+            id: true
           },
         },
         _count: {
@@ -69,7 +81,9 @@ export async function GET(request: Request) {
         },
         likes: {
           where: {
-            userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+            user:{
+              clerkId: userId
+            }
           },
           select: {
             id: true,
@@ -77,7 +91,9 @@ export async function GET(request: Request) {
         },
         retweets: {
           where: {
-            userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+            user:{
+              clerkId: userId
+            }
           },
           select: {
             id: true,

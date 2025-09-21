@@ -1,4 +1,4 @@
-import Image from "./Image"
+import Image from "./Image";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 const menuList = [
   { id: 1, name: "Homepage", link: "/", icon: "home.svg" },
   { id: 2, name: "Explore", link: "/", icon: "explore.svg" },
@@ -21,9 +22,13 @@ const menuList = [
 ];
 
 const LeftBar = async () => {
+  const { userId } = await auth();
+  if (!userId) {
+    return "You must be authenticated";
+  }
   const user = await prisma.user.findUnique({
     where: {
-      username: "nicholas78",
+      clerkId: userId,
     },
   });
   if (!user) return null;
@@ -77,7 +82,7 @@ const LeftBar = async () => {
           href="/"
           className=" bg-white/75 w-12 px-2 h-12 text-black rounded-full xl:hidden  flex items-center justify-center"
         >
-          <Image src="/icons/post.svg" width={27} height={27} alt=""/>
+          <Image src="/icons/post.svg" width={27} height={27} alt="" />
         </Link>
         <Link
           href="/"
@@ -113,7 +118,7 @@ const LeftBar = async () => {
               <Link href="/login">Add an existing account</Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="font-bold text-[14px]">
-              <Link href="/logout">Log out @{user.username}</Link>
+              <Link href="/sign-in">Log out @{user.username}</Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

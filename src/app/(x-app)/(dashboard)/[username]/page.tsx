@@ -2,6 +2,7 @@ import Feed from "@/components/Feed";
 import UserDetails from "@/components/UserDetails";
 import UserPostNav from "@/components/UserPostNav";
 import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -12,6 +13,10 @@ const UserPosts = async ({
 }) => {
   const userName = (await params).username;
   // Fetch user data
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Could not authenticate the user");
+  }
   const data = await prisma.user.findUnique({
     where: {
       username: userName,
@@ -29,7 +34,7 @@ const UserPosts = async ({
           likes: {
             where: {
               user: {
-                username: "nicholas78",
+                clerkId: userId,
               },
             },
             select: {
@@ -39,7 +44,7 @@ const UserPosts = async ({
           retweets: {
             where: {
               user: {
-                username: "nicholas78",
+                clerkId: userId,
               },
             },
             select: {
@@ -71,12 +76,14 @@ const UserPosts = async ({
         username: data.username,
         avatar: data.avatar,
         name: data.name,
+        id: data.id,
       },
     })),
   ];
   const user = {
     username: data?.username,
     banner: data?.banner,
+    id: data.id,
     name: data.name,
     bio: data?.bio,
     avatar: data?.avatar,
