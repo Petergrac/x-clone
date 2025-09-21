@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import LeftBar from "@/components/LeftPanel";
 import RightPanel from "@/components/RightPanel";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,21 +27,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-     <html lang="en" suppressHydrationWarning>
-        <head />
-        <body
-        className={`${geistMono.variable} flex w-screen h-screen justify-center ${geistSans.variable} antialiased`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <LeftBar />
-            {children}
-            <RightPanel />
-          </ThemeProvider>
-        </body>
-      </html>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body
+        className={`${geistMono.variable} flex w-screen h-screen justify-center ${geistSans.variable} antialiased`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <LeftBar />
+          {children}
+          <RightPanel />
+          <Toaster position={`top-center`} richColors={true} />
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

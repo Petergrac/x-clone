@@ -1,8 +1,6 @@
 import prisma from "@/lib/prisma";
 import { faker } from "@faker-js/faker";
 
-
-
 async function main() {
   console.log("🌱 Seeding database...");
 
@@ -38,9 +36,7 @@ async function main() {
         prisma.tweet.create({
           data: {
             content: faker.lorem.sentence(),
-            image: [
-              `https://picsum.photos/seed/${faker.string.uuid()}/600/400`,
-            ],
+            image: `https://picsum.photos/seed/${faker.string.uuid()}/600/400`,
             authorId: user.id,
           },
         })
@@ -86,7 +82,7 @@ async function main() {
       await prisma.tweet.create({
         data: {
           content: faker.lorem.sentence(),
-          image: [`https://picsum.photos/seed/${faker.string.uuid()}/600/400`],
+          image: `https://picsum.photos/seed/${faker.string.uuid()}/600/400`,
           authorId: user.id,
           parentId: parentTweet.id,
         },

@@ -1,6 +1,7 @@
 "use client";
 import {
   Bookmark,
+  Eye,
   Heart,
   MessageCircle,
   MoreHorizontal,
@@ -15,6 +16,7 @@ import Image from "./Image";
 
 const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
   const [showMore, setShowMore] = useState(false);
+  const [sensitiveTrigger, setTrigger] = useState(tweet.isSensitive);
   return (
     <div className="border-t">
       {tweet.retweets.length > 0 && (
@@ -74,15 +76,17 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
             />
           </div>
           {/* Tweet content */}
-          <Link
-            href={`/${tweet.author.username}/status/${tweet.id}`}
-            className="text-white/85 pr-2"
-          >
-            <p className={`${showMore ? "" : "max-h-22 overflow-hidden"}`}>
-              {tweet.content}
-            </p>
-          </Link>
-          {tweet.content.length > 200 && (
+          {tweet.content && (
+            <Link
+              href={`/${tweet.author.username}/status/${tweet.id}`}
+              className="text-white/85 pr-2"
+            >
+              <p className={`${showMore ? "" : "max-h-22 overflow-hidden"}`}>
+                {tweet.content}
+              </p>
+            </Link>
+          )}
+          {tweet.content && tweet.content.length > 200 && (
             <button
               onClick={() => setShowMore((prev) => !prev)}
               className="text-sky-400 hover:underline pb-2 text-end pr-2"
@@ -93,15 +97,27 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
           {/* Image, video, gif content */}
           <Link
             href={`/${tweet.author.username}/status/${tweet.id}`}
-            className="mx-auto w-full"
+            className="mx-auto w-full relative"
           >
-            <Image
-              src={(tweet.image && tweet.image[0]) || "/general/post.jpg"}
-              width={500}
-              height={500}
-              alt=""
-              tr={true}
-            />
+            {sensitiveTrigger && tweet.isSensitive && (
+              <button
+                onClick={() => setTrigger((prev) => !prev)}
+                className="absolute top-1/2 left-1/2 z-10"
+              >
+                <Eye />
+              </button>
+            )}
+            <div className="pr-8 pt-5">
+              <Image
+                src={tweet.image || "/general/post.jpg"}
+                isSensitive={sensitiveTrigger}
+                width={600}
+                height={400}
+                feed={true}
+                alt=""
+                tr={true}
+              />
+            </div>
           </Link>
           {/* Comment, repost, like, views, save, share */}
           <div className="flex text-gray-500 justify-between pr-4 mt-2">

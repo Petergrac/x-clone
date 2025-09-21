@@ -120,6 +120,38 @@
     @apply bg-background text-foreground;
   }
 }
-.anim{
-  @apply duration-500 transition-all
+.anim {
+  @apply duration-500 transition-all;
+}
+
+/* styles.css */
+.custom-progress {
+  border: none;
+  background-color: transparent; /* Makes the track transparent */
+}
+
+.custom-progress::-webkit-progress-bar {
+  background-color: transparent;
+}
+
+/* This targets the actual progress value (the filled part) */
+.custom-progress::-webkit-progress-value {
+  background-color: #ef4444; /* Tailwind's red-500 color */
+}
+
+/* For Firefox, which uses a different pseudo-element */
+.custom-progress::-moz-progress-bar {
+  background-color: #ef4444;
+}
+progress {
+  width: 100vw;
+  left: 0;
+  position: fixed;
+  top: 0;
+  z-index: 200;
+}
+progress[value] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
 }

@@ -1,4 +1,4 @@
-import { Image as IKImage, ImageKitProvider } from "@imagekit/next";
+import { Image as IKImage } from "@imagekit/next";
 
 export default function Image({
   src,
@@ -6,25 +6,29 @@ export default function Image({
   height,
   alt,
   tr,
+  isSensitive,
+  feed,
 }: {
   src: string;
+  feed?: boolean;
   width: number;
   height: number;
   alt: string;
   tr?: boolean;
+  isSensitive?: boolean;
 }) {
-  const data = { src, alt, height, width, tr };
+  const data = { src, alt, height, width, tr, isSensitive };
   return (
-    <ImageKitProvider urlEndpoint="https://ik.imagekit.io/apostle4dvpgw855fxx">
-      <IKImage
-        src={data.src}
-        width={data.width}
-        height={data.height}
-        alt={data.alt}
-        transformation={[
-          { width: data.width, height: data.height, quality: 80 },
-        ]}
-      />
-    </ImageKitProvider>
+    <IKImage
+      className={`${feed && "rounded-md overflow-hidden"} object-cover ${
+        data.isSensitive ? "blur-sm" : ""
+      }`}
+      urlEndpoint="https://ik.imagekit.io/apostle4dvpgw855fxx"
+      src={data.src}
+      alt={data.alt}
+      width={data.width}
+      height={data.height}
+      transformation={[{ quality: 80 }]}
+    />
   );
 }

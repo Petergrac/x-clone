@@ -1,10 +1,11 @@
 export type TweetInteraction = {
   id: string;
-  content: string;
+  content: string | null;
   authorId: string;
   parentId: string | null;
   createdAt: Date;
-  image: string[];
+  image: string | null;
+  isSensitive: boolean;
   author: {
     username: string;
     avatar: string | null;

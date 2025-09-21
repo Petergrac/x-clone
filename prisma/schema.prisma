@@ -34,10 +34,11 @@ model User {
 
 model Tweet {
   id         String    @id @default(uuid())
-  content    String
+  content    String?
   author     User      @relation("AuthorTweets", fields: [authorId], references: [id])
   authorId   String
-  image      String[]   @default([])
+  image      String?
+  isSensitive Boolean @default(false)
   parent     Tweet?    @relation("ReplyTo", fields: [parentId], references: [id])
   parentId   String?
   replies    Tweet[]   @relation("ReplyTo")

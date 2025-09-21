@@ -7,11 +7,11 @@ export async function GET(request: Request) {
 
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  const isFollwing = searchParams.get("feedType");
+  const isFollowing = searchParams.get("feedType");
 
   let targetUserIds: string[] = [];
 
-  if (!isFollwing) {
+  if (!isFollowing) {
     // Find all users following you
     const whoFollowsMe = await prisma.follow.findMany({
       where: {
@@ -39,9 +39,6 @@ export async function GET(request: Request) {
   try {
     const tweets = await prisma.tweet.findMany({
       where: {
-        authorId: {
-          not: "e56632d3-8b56-40d2-a576-178afbdf05d1", // Tweets that are not yours
-        },
         parentId: null,
         // Include posts for those who follow you
         OR: [
