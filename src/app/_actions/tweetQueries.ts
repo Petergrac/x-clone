@@ -51,7 +51,14 @@ export async function deleteTweet(tweetId: string) {
   revalidatePath(`/username`);
   return deletedTweet;
 }
-
+/**
+ *  =====================
+ *                      HANDLE RETWEETS
+ *                            =============================
+ * @param originalId
+ * @param userId
+ * @returns
+ */
 export async function reTweet(originalId: string, userId: string) {
   // Check if the retweet is in the record
   const hasRetweeted = await prisma.retweet.findUnique({
@@ -83,5 +90,44 @@ export async function reTweet(originalId: string, userId: string) {
     });
     revalidatePath(`/`);
     return !!deletedTweet;
+  }
+}
+
+export async function likeActions(tweetId: string, userId: string) {
+  // Check if the user has liked the tweet
+  const hasLiked = await prisma.like.findUnique({
+    where: {
+      userId_tweetId: {
+        userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+        tweetId,
+      },
+    },
+  });
+  // Add like record if the user has not liked the tweet
+  if (!hasLiked) {
+    const newLike = await prisma.like.create({
+      data: {
+        userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+        tweetId,
+      },
+      select: {
+        id: true,
+      },
+    });
+    return !!newLike;
+  } else {
+    const deleteLike = await prisma.like.delete({
+      where: {
+        userId_tweetId: {
+          userId: "e56632d3-8b56-40d2-a576-178afbdf05d1",
+          tweetId,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return !!deleteLike;
   }
 }

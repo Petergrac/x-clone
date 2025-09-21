@@ -20,7 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { deleteTweet, reTweet } from "@/app/_actions/tweetQueries";
+import { deleteTweet, likeActions, reTweet } from "@/app/_actions/tweetQueries";
 import { toast } from "sonner";
 import TweetInput from "./TweetInput";
 import {
@@ -35,10 +35,14 @@ import {
 const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
   const [showMore, setShowMore] = useState(false);
   const [sensitiveTrigger, setTrigger] = useState(tweet.isSensitive);
+  // Retweets
   const [isRetweeted, setRetweeted] = useState(!!tweet.retweets.length);
   const [retweetCount, setRetweetCount] = useState(tweet._count.retweets);
+  // Likes
+  const [hasLiked, setHasLiked] = useState(!!tweet.likes.length);
+  const [likesCount, setLikesCount] = useState(tweet._count.likes);
 
-  // Delete a tweet
+  //  ========================== Delete a tweet =========================
   const handleDelete = async () => {
     const deletedTweet = await deleteTweet(tweet.id);
     if (deletedTweet) {
@@ -48,19 +52,30 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
     }
   };
 
-  // Retweet a tweet
+  // ============================= Retweet a tweet =======================
   const handleRetweet = async () => {
     if (tweet.id) {
       if (isRetweeted) {
         setRetweetCount(retweetCount - 1);
-        setRetweeted(false)
+        setRetweeted(false);
       } else {
         setRetweetCount(retweetCount + 1);
-        setRetweeted(true)
+        setRetweeted(true);
       }
-      const retweet = await reTweet(tweet.id, "");
-      if (retweet) {
+      await reTweet(tweet.id, "");
+    }
+  };
+  // ============================ Handle likes =========================
+  const handleLikes = async () => {
+    if (tweet.id) {
+      if (hasLiked) {
+        setLikesCount(likesCount - 1);
+        setHasLiked(false);
+      } else {
+        setLikesCount(likesCount + 1);
+        setHasLiked(true);
       }
+      await likeActions(tweet.id, "");
     }
   };
   return (
@@ -217,14 +232,15 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
             </p>
             {/* LIKES */}
             <p
+              onClick={handleLikes}
               className={
-                tweet.likes && tweet.likes.length > 0
+                hasLiked
                   ? "text-rose-500 flex items-center gap-2 cursor-pointer"
                   : "flex items-center gap-2 cursor-pointer hover:text-rose-600 anim"
               }
             >
               <Heart width={20} />
-              {tweet._count.likes}
+              {likesCount}
             </p>
             <div className="flex gap-4 ">
               <Bookmark
