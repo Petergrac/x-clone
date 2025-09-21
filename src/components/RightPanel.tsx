@@ -21,7 +21,7 @@ const RightPanel = async () => {
     },
   });
   return (
-    <div className="w-[clamp(290px,25vw,350px)] ml-6 lg:flex flex-col gap-3 h-fit hidden">
+    <div className="w-[clamp(290px,25vw,350px)] ml-6 lg:flex flex-col gap-3 h-fit hidden sticky z-40 top-0">
       {/* SEARCH BAR */}
       <div className="flex items-center p-3 gap-2 rounded-full anim border flex-1 mt-2  hover:border-sky-400 hover:border-1">
         <SearchIcon color="gray" />

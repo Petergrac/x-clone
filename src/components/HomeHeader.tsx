@@ -30,9 +30,9 @@ const HomeHeader = ({
     fetchUser();
   }, []);
   return (
-    <div>
+    <div >
       <h1 className="text-2xl font-bold text-center py-4 sm:hidden">X-Clone</h1>
-      <nav className="w-full gap-4 flex justify-between md:justify-around border-b sm:sticky fixed top-0 z-10 bg-black/50  px-4">
+      <nav className="w-full md:w-150 gap-4 flex justify-between md:justify-around border-b fixed top-0 z-10 bg-black/50  px-4">
         <Link
           href="/"
           className={`${

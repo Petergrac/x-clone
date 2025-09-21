@@ -7,16 +7,43 @@ import {
   MoreHorizontal,
   Repeat,
   Share,
+  Trash2Icon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { useState } from "react";
 import { TweetInteraction } from "@/types/tweet";
 import Image from "./Image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { deleteTweet } from "@/app/_actions/tweetQueries";
+import { toast } from "sonner";
+import TweetInput from "./TweetInput";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 
 const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
   const [showMore, setShowMore] = useState(false);
   const [sensitiveTrigger, setTrigger] = useState(tweet.isSensitive);
+  // Delete a tweet
+  const handleDelete = async () => {
+    const deletedTweet = await deleteTweet(tweet.id);
+    if (deletedTweet) {
+      toast.success("Tweet deleted");
+    } else {
+      toast.error("Tweet could not be deleted");
+    }
+  };
   return (
     <div className="border-t">
       {tweet.retweets.length > 0 && (
@@ -70,10 +97,23 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
               </Link>
             </div>
             {/* More */}
-            <MoreHorizontal
-              width={30}
-              className="pr-2 text-gray-500 hover:text-gray-600 anim"
-            />
+            <DropdownMenu>
+              <DropdownMenuTrigger className="outline-none">
+                <MoreHorizontal
+                  width={30}
+                  className="pr-2 text-gray-500 hover:text-gray-600 anim"
+                />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  onClick={handleDelete}
+                  className="text-red-500"
+                >
+                  <Trash2Icon color="red" />
+                  <p className="font-bold text-sm">Delete</p>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           {/* Tweet content */}
           {tweet.content && (
@@ -95,36 +135,57 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
             </button>
           )}
           {/* Image, video, gif content */}
-          <Link
-            href={`/${tweet.author.username}/status/${tweet.id}`}
-            className="mx-auto w-full relative"
-          >
-            {sensitiveTrigger && tweet.isSensitive && (
-              <button
-                onClick={() => setTrigger((prev) => !prev)}
-                className="absolute top-1/2 left-1/2 z-10"
-              >
-                <Eye />
-              </button>
-            )}
-            <div className="pr-8 pt-5">
-              <Image
-                src={tweet.image || "/general/post.jpg"}
-                isSensitive={sensitiveTrigger}
-                width={600}
-                height={400}
-                feed={true}
-                alt=""
-                tr={true}
-              />
-            </div>
-          </Link>
+          {tweet.image && (
+            <Link
+              href={`/${tweet.author.username}/status/${tweet.id}`}
+              className="mx-auto w-full relative"
+            >
+              {sensitiveTrigger && tweet.isSensitive && (
+                <button
+                  onClick={() => setTrigger((prev) => !prev)}
+                  className="absolute top-1/2 left-1/2 z-10"
+                >
+                  <Eye />
+                </button>
+              )}
+              <div className="pr-8 pt-5">
+                <Image
+                  src={tweet.image || "/general/post.jpg"}
+                  isSensitive={sensitiveTrigger}
+                  width={600}
+                  height={400}
+                  feed={true}
+                  alt=""
+                  tr={true}
+                />
+              </div>
+            </Link>
+          )}
           {/* Comment, repost, like, views, save, share */}
           <div className="flex text-gray-500 justify-between pr-4 mt-2">
             {/* COMMENTS */}
-            <p className="flex items-center gap-2 hover:text-sky-500 anim cursor-pointer">
-              <MessageCircle width={20} /> {tweet._count.replies}
-            </p>
+            <Dialog>
+              <DialogTrigger className="outline-none">
+                <p className="flex items-center gap-2 hover:text-sky-500 anim cursor-pointer">
+                  <MessageCircle width={20} /> {tweet._count.replies}
+                </p>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="text-base">
+                    Replying to{" "}
+                    <span className="text-gray-500 text-sm">
+                      @{tweet.author.username}
+                    </span>
+                  </DialogTitle>
+                  <DialogDescription className="min-h-10 max-h-32 overflow-hidden text-start">
+                    {/* Make sure you  */}
+                    {tweet.content}
+                  </DialogDescription>
+                </DialogHeader>
+                <TweetInput parentId={tweet.id} tweetType="Reply2" />
+              </DialogContent>
+            </Dialog>
             {/* RETWEETS */}
             <p
               className={`flex items-center gap-2 ${

@@ -101,13 +101,21 @@ const PostDetails = async ({
   if (!mainTweet) {
     // Handle null tweets
     return (
-      <div className="h-[50vh] w-full font-bold">This tweet does not exist</div>
+      <div className="h-[50vh] w-full font-bold flex justify-center items-center gap-4 flex-col">
+        <p className="text-red-500">This tweet does not exist</p>
+        <Link
+          href={`/`}
+          className="bg-white rounded-2xl py-2 px-4 text-black anim"
+        >
+          Home
+        </Link>
+      </div>
     );
   }
   return (
-    <div>
+    <div className="mt-6">
       {/* Page bar */}
-      <div className="flex w-full justify-between sticky top-0 z-10  items-center bg-black/50 px-4 py-4">
+      <div className="flex w-full md:w-150 justify-between fixed top-0 z-20  items-center bg-black/50 px-4 py-4">
         <div className="justify-start flex items-center gap-5">
           <Link href={`/`}>
             <ArrowLeft />
@@ -116,7 +124,7 @@ const PostDetails = async ({
         </div>
         {/* Reply & Filters */}
         <Dialog>
-          <DialogTrigger className="font-bold border-2 border-white/75 py-2 px-4 rounded-full cursor-pointer hover:bg-gray-800 anim">
+          <DialogTrigger className="font-bold border-2  border-white/75 py-2 px-4 rounded-full cursor-pointer hover:bg-gray-800 anim">
             Reply
           </DialogTrigger>
           <DialogContent>
@@ -132,14 +140,14 @@ const PostDetails = async ({
                 {mainTweet.content}
               </DialogDescription>
             </DialogHeader>
-            <TweetInput tweetType="Reply" />
+            <TweetInput parentId={tweetId} tweetType="Reply" />
           </DialogContent>
         </Dialog>
       </div>
       <br className="pt-15" />
       {/* Main Tweet  */}
       <Feed tweet={mainTweet} />
-      <TweetInput tweetType="Reply2" />
+      <TweetInput parentId={tweetId} tweetType="Reply2" />
       {/* Replies */}
       {replies.length > 0 ? (
         replies.map((reply) => <Feed key={reply.id} tweet={reply} />)

@@ -9,6 +9,7 @@ import UploadImage from "../lib/ImageUpload";
 import { toast } from "sonner";
 import { CreateTweet } from "@/app/_actions/tweetQueries";
 import { redirect } from "next/navigation";
+import { replyTweet } from "@/app/_actions/repliesQueries";
 
 const media = [
   "/icons/image.svg",
@@ -25,8 +26,10 @@ type UserType = {
 
 const TweetInput = ({
   tweetType,
+  parentId,
   user,
 }: {
+  parentId?: string;
   tweetType: string;
   user?: UserType;
 }) => {
@@ -50,8 +53,19 @@ const TweetInput = ({
   if (image) imageUrl = URL.createObjectURL(image);
   // Save the edited image
   const handleTweet = async () => {
+    if (
+      parentId &&
+      (tweetType === "Reply2" || tweetType === "Reply") &&
+      tweetInput.trim().length > 0
+    ) {
+      const reply = await replyTweet(parentId, tweetInput);
+      if (reply) {
+        toast.success("Reply Saved");
+      }else{
+        toast.error("Can't delete the tweet")
+      }
+    }
     // Image, sensitivity, cropping , tweet body, progress
-
     // 1. Tweet with image only
     if (image && tweetInput.trim().length === 0) {
       const imageDetails = await UploadImage(image, cropType, setProgress);
@@ -187,7 +201,7 @@ const TweetInput = ({
           {/* INPUT & PERSONALIZATION */}
           <div
             className={`flex ${
-              tweetType === "Reply2" && iconsToggle === true
+              tweetType === "Reply2" && iconsToggle === false
                 ? "pr-5"
                 : "flex-col"
             } w-full gap-4  py-4`}
@@ -196,18 +210,17 @@ const TweetInput = ({
             <input
               type="text"
               onClick={() => {
-                if (tweetType === "Reply2" && iconsToggle) setToggle(false);
+                if (tweetType === "Reply2" && !iconsToggle) setToggle(true);
               }}
               onBlur={(e) => {
                 setInput(e.target.value);
-                if (tweetType === "Reply2" && !iconsToggle) setToggle(true);
               }}
               placeholder={`${
                 tweetType === "Post" ? "What's happening?" : "Post your Reply"
               }`}
               className="bg-transparent outline-none p-2 w-full placeholder:text-xl placeholder:text-muted-foreground"
             />
-            {tweetType === "Reply2" && iconsToggle === true && (
+            {tweetType === "Reply2" && iconsToggle === false && (
               <button className="w-fit hover:bg-white/55 anim bg-white/75 text-black font-bold text-lg py-2 px-4 rounded-full">
                 {tweetType.charAt(0) === "R" ? "Reply" : "Post"}
               </button>
@@ -240,14 +253,14 @@ const TweetInput = ({
                 <TestImage src={imageUrl} alt="" fill />
               </div>
             )}
-            {tweetType === "Reply2" && iconsToggle === true ? null : (
+            {tweetType === "Reply2" && iconsToggle === false ? null : (
               <TweetFilter />
             )}
           </div>
           {/* MEDIA SELECTOR & BUTTON */}
           <div className="flex justify-between items-center py-2 pr-5">
             <div className="flex  gap-3">
-              {tweetType === "Reply2" && iconsToggle === true
+              {tweetType === "Reply2" && iconsToggle === false
                 ? null
                 : media.map((icon) => (
                     <div className="" key={icon}>
@@ -259,6 +272,7 @@ const TweetInput = ({
                             className="hidden"
                             id="image"
                             onChange={(e) => handleImageChange(e)}
+                            onBlur={() => setToggle(false)}
                           />
                           {/* <UploadExample setImage={setImage} /> */}
                         </label>
@@ -270,7 +284,7 @@ const TweetInput = ({
                     </div>
                   ))}
             </div>
-            {tweetType === "Reply2" && iconsToggle === true ? null : (
+            {tweetType === "Reply2" && iconsToggle === false ? null : (
               <button
                 onClick={handleTweet}
                 className="w-fit hover:bg-white/55 anim bg-white/75 text-black font-bold text-lg py-2 px-4 rounded-full"
