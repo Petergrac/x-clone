@@ -20,7 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { deleteTweet } from "@/app/_actions/tweetQueries";
+import { deleteTweet, reTweet } from "@/app/_actions/tweetQueries";
 import { toast } from "sonner";
 import TweetInput from "./TweetInput";
 import {
@@ -35,6 +35,9 @@ import {
 const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
   const [showMore, setShowMore] = useState(false);
   const [sensitiveTrigger, setTrigger] = useState(tweet.isSensitive);
+  const [isRetweeted, setRetweeted] = useState(!!tweet.retweets.length);
+  const [retweetCount, setRetweetCount] = useState(tweet._count.retweets);
+
   // Delete a tweet
   const handleDelete = async () => {
     const deletedTweet = await deleteTweet(tweet.id);
@@ -44,9 +47,25 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
       toast.error("Tweet could not be deleted");
     }
   };
+
+  // Retweet a tweet
+  const handleRetweet = async () => {
+    if (tweet.id) {
+      if (isRetweeted) {
+        setRetweetCount(retweetCount - 1);
+        setRetweeted(false)
+      } else {
+        setRetweetCount(retweetCount + 1);
+        setRetweeted(true)
+      }
+      const retweet = await reTweet(tweet.id, "");
+      if (retweet) {
+      }
+    }
+  };
   return (
     <div className="border-t">
-      {tweet.retweets.length > 0 && (
+      {isRetweeted && (
         <div className="px-5 pt-2 text-sm  text-gray-400 flex items-center gap-2">
           <Repeat size={17} />
           <p className="text-white/85">You Reposted</p>
@@ -188,14 +207,13 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
             </Dialog>
             {/* RETWEETS */}
             <p
+              onClick={handleRetweet}
               className={`flex items-center gap-2 ${
-                tweet.retweets && tweet.retweets?.length > 0
-                  ? "text-green-500"
-                  : "hover:text-green-400"
+                isRetweeted ? "text-green-500" : "hover:text-green-400"
               }  cursor-pointer`}
             >
               <Repeat width={20} />
-              {tweet._count.retweets}
+              {retweetCount}
             </p>
             {/* LIKES */}
             <p
