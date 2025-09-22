@@ -165,7 +165,7 @@ const FilteredPosts = async ({
         {filter === "replies" ? (
           <p className="text-sm">
             You haven&apos;t replied to any post.Click{" "}
-            <Link className="text-sky-500 hover:underline" href={`/`}>
+            <Link className="text-sky-500 hover:underline" href={`/dashboard`}>
               Here
             </Link>{" "}
             to go back to homepage
@@ -173,7 +173,7 @@ const FilteredPosts = async ({
         ) : (
           <p className="text-sm">
             You have&apos;nt liked any post.Click
-            <Link className="text-sky-500 hover:underline" href={`/`}>
+            <Link className="text-sky-500 hover:underline" href={`/dashboard`}>
               Here
             </Link>{" "}
             to go back to homepage

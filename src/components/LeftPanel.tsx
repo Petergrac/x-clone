@@ -1,14 +1,10 @@
 import Image from "./Image";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { UserButton } from "@clerk/nextjs";
 const menuList = [
   { id: 1, name: "Homepage", link: "/", icon: "home.svg" },
   { id: 2, name: "Explore", link: "/", icon: "explore.svg" },
@@ -41,7 +37,7 @@ const LeftBar = async () => {
       <div className="flex flex-col gap-4 items-center text-lg 2xl:items-start">
         <Link
           className="rounded-full flex relative hover:bg-[#181818] items-center gap-4 px-2 xl:pr-5"
-          href="/"
+          href="/dashboard"
         >
           <svg
             fill="#fff"
@@ -61,7 +57,7 @@ const LeftBar = async () => {
           {menuList.map((item, i) => (
             <div key={item.name + i}>
               <Link
-                href={item.link}
+                href={`/dashboard/${item.link}`}
                 className="p-2 rounded-full hover:bg-[#181818] flex items-center gap-4"
                 key={item.id}
               >
@@ -79,13 +75,13 @@ const LeftBar = async () => {
         </div>
         {/* BUTTON */}
         <Link
-          href="/"
+          href="/dashboard"
           className=" bg-white/75 w-12 px-2 h-12 text-black rounded-full xl:hidden  flex items-center justify-center"
         >
           <Image src="/icons/post.svg" width={27} height={27} alt="" />
         </Link>
         <Link
-          href="/"
+          href="/dashboard"
           className="hidden xl:block font-bold bg-white/75 text-black rounded-full py-2 px-20"
         >
           Post
@@ -95,33 +91,12 @@ const LeftBar = async () => {
       {/* USER */}
       <div className="flex items-center justify-between anim hover:bg-muted-foreground/35 cursor-pointer rounded-full p-2">
         <div className="flex gap-1 items-center">
-          <Avatar>
-            <AvatarImage
-              src={`${
-                user?.avatar ? user.avatar : "https://github.com/shadcn.png"
-              }`}
-              alt="@shadcn"
-            />
-            <AvatarFallback>{fallBacks}</AvatarFallback>
-          </Avatar>
+          <UserButton />
           <div className="xl:flex hidden  flex-col items-center justify-center">
             <span className="text-sm font-bold">{user.username}</span>
             <span className="text-sm font-extralight">@{user.username}</span>
           </div>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger className="outline-none">
-            <div className="hidden xl:block cursor-pointer font-bold">...</div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-60 shadow-white/25 p-3 bg-black shadow-md">
-            <DropdownMenuItem className="font-bold text-[14px]">
-              <Link href="/login">Add an existing account</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="font-bold text-[14px]">
-              <Link href="/sign-in">Log out @{user.username}</Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
     </div>
   );

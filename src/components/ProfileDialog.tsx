@@ -7,23 +7,93 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import Image from "./Image";
+import Image from "next/image";
 import { ScrollArea } from "./ui/scroll-area";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { followActions, userActions } from "@/app/_actions/userQueries";
+import { toast } from "sonner";
 
-const ProfileDialog = () => {
+interface currentUserType {
+  id: string;
+  username: string;
+  banner: string | null;
+  location: string | null;
+  website: string | null;
+  avatar: string | null;
+}
+const ProfileDialog = ({ username }: { username: string | undefined }) => {
+  const [userDetails, setDetails] = useState<
+    currentUserType | null | true | false
+  >(null);
+  const [hasFollowed, setHasFollowed] = useState(true);
+  const [userData, setUserData] = useState({
+    username: "",
+    location: "",
+    website: "",
+  });
   useEffect(() => {
-    const handleUserDetails = async () => {
-      try {
-        const res = await fetch("/api/user-details");
-        const userDetails = await res.json();
-        console.log(userDetails);
-      } catch (error) {
-        console.log(error);
+    if (username) {
+      const handleUserDetails = async () => {
+        try {
+          const res = await fetch(`/api/user-details?username=${username}`);
+          const userDetails = (await res.json()) as
+            | currentUserType
+            | null
+            | true
+            | false;
+          setDetails(userDetails);
+          if (
+            userDetails !== null &&
+            (userDetails === true || userDetails === false)
+          ) {
+            setHasFollowed(userDetails);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      handleUserDetails();
+    }
+  }, [username]);
+
+  if (userDetails === null || userDetails === true || userDetails === false) {
+    const handleFollows = async () => {
+      if (username) {
+        // Follow or unfollow
+        const response = await followActions(username);
+        if (response == true || response === false) setHasFollowed(response);
+        else toast.error(response);
       }
     };
-    handleUserDetails();
-  }, []);
+    return (
+      <button
+        onClick={handleFollows}
+        className={`${
+          hasFollowed
+            ? "outline outline-white text-white"
+            : "bg-white text-black"
+        } mt-4 mr-5 anim rounded-full py-2 px-4`}
+      >
+        {hasFollowed === true ? "Unfollow" : "Follow"}
+      </button>
+    );
+  }
+  //
+  const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setUserData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+  const submitUpdate = async () => {
+    try {
+      await userActions(userData);
+      toast.success("Profile Updated Successfully");
+    } catch (error) {
+      toast.error("Failed to update profile");
+    }
+  };
   return (
     <Dialog>
       <DialogTrigger className="py-2 px-4 font-bold border-1 mt-4 rounded-full anim hover:bg-gray-800 border-gray-200 mr-3">
@@ -40,16 +110,16 @@ const ProfileDialog = () => {
               <Image
                 width={600}
                 height={200}
-                src="/general/banner.jpeg"
+                src={userDetails.banner!}
                 alt=""
-                tr={true}
               />
             </div>
             {/* USER AVATAR */}
             <div className="object-center absolute left-4 -bottom-[72px] border-5 border-black aspect-square rounded-full">
               <Image
-                src="/general/profile.jpg"
+                src={userDetails.avatar!}
                 alt=""
+                className="rounded-full"
                 width={133}
                 height={133}
               />
@@ -62,6 +132,8 @@ const ProfileDialog = () => {
               <input
                 type="text"
                 id="username"
+                defaultValue={userData.username || userDetails.username}
+                onChange={(e) => handleDataChange(e)}
                 className="border-white border focus:border-2 focus:border-sky-400 rounded-md w-full h-16 p-2 pt-6 peer outline-none"
               />
               <label
@@ -71,25 +143,12 @@ const ProfileDialog = () => {
                 Username
               </label>
             </div>
-            {/* BIO */}
-            <div className="relative mt-4">
-              <input
-                type="text"
-                id="Bio"
-                className="border focus:border-2 focus:border-sky-400 rounded-md w-full h-32 p-2 pt-6 peer outline-none"
-              />
-              <label
-                htmlFor="Bio"
-                className="absolute top-6 left-2 -translate-y-1/2 text-gray-400 transition-all duration-300 peer-focus:top-2 peer-focus:left-2 peer-focus:text-xs peer-focus:text-blue-600 peer-focus:-translate-y-0"
-              >
-                Bio
-              </label>
-            </div>{" "}
             {/* LOCATION */}
             <div className="relative mt-4">
               <input
                 type="text"
                 id="location"
+                defaultValue={userData.location! || userDetails.location!}
                 className=" border focus:border-2 focus:border-sky-400 rounded-md w-full h-16 p-2 pt-6 peer outline-none"
               />
               <label
@@ -104,6 +163,7 @@ const ProfileDialog = () => {
               <input
                 type="text"
                 id="website"
+                defaultValue={userData.website! || userDetails.website!}
                 className="border focus:border-2 focus:border-sky-400 rounded-md w-full h-16 p-2 pt-6 peer outline-none"
               />
               <label
@@ -116,7 +176,10 @@ const ProfileDialog = () => {
           </div>
         </ScrollArea>
         <DialogFooter>
-          <button className="py-2 px-4 font-bold bg-white/95 text-black rounded-full">
+          <button
+            onClick={submitUpdate}
+            className="py-2 px-4 font-bold bg-white/95 text-black rounded-full"
+          >
             Save
           </button>
         </DialogFooter>

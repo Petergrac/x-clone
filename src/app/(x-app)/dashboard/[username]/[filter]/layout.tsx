@@ -46,7 +46,7 @@ export default async function InLayout({
         {/* NAME, NUMBER OF POSTS */}
         <div className="flex items-center gap-4 ml-3 mt-3">
           <Link
-            href={`/`}
+            href={`/dashboard`}
             className="hover:bg-gray-800 aspect-square p-2 rounded-full"
           >
             <ArrowLeftIcon />

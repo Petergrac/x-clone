@@ -89,7 +89,7 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
       )}
       <div className="w-full flex items-start py-3">
         {/* Profile */}
-        <Link href={`/${tweet.author.username}`} className="p-4">
+        <Link href={`/dashboard/${tweet.author.username}`} className="p-4">
           <Avatar>
             <Avatar>
               <AvatarImage
@@ -107,14 +107,14 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
             <div className="flex items-center gap-2">
               {/* Username */}
               <Link
-                href={`/${tweet.author.username}`}
+                href={`/dashboard/${tweet.author.username}`}
                 className="text-lg font-semibold text-white/85"
               >
                 {tweet.author.username}
               </Link>
               {/* tweet handle */}
               <Link
-                href={`/${tweet.author.username}`}
+                href={`/dashboard/${tweet.author.username}`}
                 className="text-gray-500"
               >
                 @{tweet.author.username}
@@ -122,7 +122,7 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
               <p className="text-gray-500">&middot;</p>
               {/* Date */}
               <Link
-                href={`/${tweet.author.username}/status/${tweet.id}`}
+                href={`/dashboard/${tweet.author.username}/status/${tweet.id}`}
                 className="text-gray-500"
               >
                 {new Date(tweet.createdAt).toLocaleDateString("en-US", {
@@ -153,7 +153,7 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
           {/* Tweet content */}
           {tweet.content && (
             <Link
-              href={`/${tweet.author.username}/status/${tweet.id}`}
+              href={`/dashboard/${tweet.author.username}/status/${tweet.id}`}
               className="text-white/85 pr-2"
             >
               <p className={`${showMore ? "" : "max-h-22 overflow-hidden"}`}>
@@ -172,7 +172,7 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
           {/* Image, video, gif content */}
           {tweet.image && (
             <Link
-              href={`/${tweet.author.username}/status/${tweet.id}`}
+              href={`/dashboard/${tweet.author.username}/status/${tweet.id}`}
               className="mx-auto w-full relative"
             >
               {sensitiveTrigger && tweet.isSensitive && (

@@ -186,7 +186,7 @@ const TweetInput = ({
           </div>
         )}
         {/* AVATAR */}
-        <Link href={`/${user?.username}`} className="p-5">
+        <Link href={`/dashboard/${user?.username}`} className="p-5">
           <div className="rounded-full overflow-hidden">
             <Image
               src={user?.avatar || "https://github.com/shadcn.png"}

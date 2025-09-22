@@ -34,7 +34,7 @@ const HomeHeader = ({
       <h1 className="text-2xl font-bold text-center py-4 sm:hidden">X-Clone</h1>
       <nav className="w-full md:w-150 gap-4 flex justify-between md:justify-around border-b fixed top-0 z-10 bg-black/50  px-4">
         <Link
-          href="/"
+          href="/dashboard"
           className={`${
             isRelated.isFollowing &&
             "font-extrabold underline underline-offset-12 decoration-5 pb-3 decoration-sky-600"
@@ -44,7 +44,7 @@ const HomeHeader = ({
           For you
         </Link>
         <Link
-          href={`/`}
+          href={`/dashboard`}
           className={`${
             !isRelated.isFollowing &&
             "font-extrabold underline underline-offset-12 decoration-5 pb-3 decoration-sky-600"

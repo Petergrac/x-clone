@@ -98,14 +98,14 @@ const UserPosts = async ({
         <div className="my-17">
           <div className="flex items-center bg-black/55 w-full gap-4 ml-3 fixed top-0 z-10 ">
             <Link
-              href={`/`}
+              href={`/dashboard`}
               className="hover:bg-gray-800 aspect-square p-2 rounded-full"
             >
               <ArrowLeftIcon />
             </Link>
             {/* Name & Number of posts */}
             <div className="flex flex-col justify-start">
-              <p className="text-2xl font-bold">{data?.name || "ℕΣΜΣЅℐЅ"}</p>
+              <p className="text-2xl font-bold">{data?.name}</p>
               <p className="text-sm text-muted-foreground">
                 {data?.tweets.length} posts
               </p>

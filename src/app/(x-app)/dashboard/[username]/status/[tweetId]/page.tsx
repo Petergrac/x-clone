@@ -16,16 +16,19 @@ import Link from "next/link";
 const PostDetails = async ({
   params,
 }: {
-  params: Promise<{ tweetId: string }>;
+  params: Promise<{ tweetId: string; username: string }>;
 }) => {
   // Find this specific tweet
-  const { tweetId } = await params;
+  const { tweetId, username } = await params;
+  console.log(username, tweetId)
 
   // Get current user Id
-  const {userId} = await auth();
-  if(!userId){
-    throw new Error("Could not authenticate the user")
-  }
+  // const {userId} = await auth();
+
+  // if (!userId) {
+  //   throw new Error("Could not authenticate the user");
+  // }
+
   const mainTweet = await prisma.tweet.findUnique({
     where: {
       id: tweetId,
@@ -36,7 +39,7 @@ const PostDetails = async ({
           username: true,
           avatar: true,
           name: true,
-          id: true
+          id: true,
         },
       },
       _count: {
@@ -49,14 +52,14 @@ const PostDetails = async ({
       likes: {
         where: {
           user: {
-           clerkId: userId,
+            username
           },
         },
       },
       retweets: {
         where: {
           user: {
-         clerkId: userId,
+            username
           },
         },
         select: {
@@ -77,7 +80,7 @@ const PostDetails = async ({
           username: true,
           avatar: true,
           name: true,
-          id: true
+          id: true,
         },
       },
       _count: {
@@ -90,14 +93,14 @@ const PostDetails = async ({
       likes: {
         where: {
           user: {
-            clerkId: userId,
+            username
           },
         },
       },
       retweets: {
         where: {
           user: {
-             clerkId: userId,
+            username
           },
         },
         select: {
@@ -113,7 +116,7 @@ const PostDetails = async ({
       <div className="h-[50vh] w-full font-bold flex justify-center items-center gap-4 flex-col">
         <p className="text-red-500">This tweet does not exist</p>
         <Link
-          href={`/`}
+          href={`/dashboard`}
           className="bg-white rounded-2xl py-2 px-4 text-black anim"
         >
           Home
@@ -126,7 +129,7 @@ const PostDetails = async ({
       {/* Page bar */}
       <div className="flex w-full md:w-150 justify-between fixed top-0 z-20  items-center bg-black/50 px-4 py-4">
         <div className="justify-start flex items-center gap-5">
-          <Link href={`/`}>
+          <Link href={`/dashboard`}>
             <ArrowLeft />
           </Link>
           <h1 className="text-2xl font-bold">Post</h1>
