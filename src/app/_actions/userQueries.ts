@@ -29,6 +29,11 @@ export async function userActions(userData: {
   }
 }
 
+/**
+ * ==================== SERVER ACTIONS TO FOLLOW A USER ==============
+ * @param username 
+ * @returns 
+ */
 export async function followActions(
   username: string
 ): Promise<boolean | string> {

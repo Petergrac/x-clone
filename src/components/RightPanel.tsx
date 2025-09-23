@@ -2,16 +2,17 @@ import { SearchIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import Followers from "./Followers";
 
 const RightPanel = async () => {
-  const {userId} = await auth();
-  if(!userId){
-    return "You must be authenticated"
+  const { userId } = await auth();
+  if (!userId) {
+    return "You must be authenticated";
   }
   const followers = await prisma.follow.findMany({
     where: {
       following: {
-        clerkId: userId
+        clerkId: userId, // They are following me
       },
     },
     select: {
@@ -25,6 +26,32 @@ const RightPanel = async () => {
       },
     },
   });
+
+  const following = await prisma.follow.findMany({
+    where: {
+      follower: {
+        clerkId: userId, // I follow them
+      },
+    },
+    select: {
+      following: {
+        select: {
+          id: true,
+          username: true,
+          avatar: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  // Get the IDs of users I follow
+  const followingIds = new Set(following.map((f) => f.following.id));
+  // Filter followers to get only the ones I don't follow back
+  const notFollowedBack = followers
+    .filter((f) => !followingIds.has(f.follower.id))
+    .map((f) => f.follower);
+
   return (
     <div className="w-[clamp(290px,25vw,350px)] ml-6 lg:flex flex-col gap-3 h-fit hidden sticky z-40 top-0">
       {/* SEARCH BAR */}
@@ -87,40 +114,36 @@ const RightPanel = async () => {
       </div>
       {/* WHO TO FOLLOW */}
       <div className="border rounded-lg p-4">
-        <h1 className="text-2xl font-bold">Who to follow</h1>
+        <h1 className="text-2xl font-bold">Your Followers</h1>
         {/* Followers */}
         {/* USE MAP HERE */}
-        {followers &&
-          followers.map((user) => (
-            <div
-              className="flex justify-between items-center cursor-pointer"
-              key={user.follower.id}
-            >
-              <div className="mt-3 flex items-center gap-2">
-                {/* AVATAR */}
-                <Avatar>
-                  <AvatarImage
-                    width={30}
-                    src={
-                      user.follower.avatar || "https://github.com/shadcn.png"
-                    }
-                    alt="@shadcn"
-                  />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                {/* USER-DETAILS */}
-                <div className="flex justify-start flex-col items-start">
-                  <h3 className="font-bold">{user.follower.name}</h3>
-                  <p className="text-muted-foreground">
-                    @{user.follower.username}
-                  </p>
-                </div>
-              </div>
-              <button className="text-black bg-white/95 font-bold rounded-full h-fit py-2 px-3">
-                Follow
-              </button>
-            </div>
-          ))}
+        {notFollowedBack.length > 0 ? (
+          notFollowedBack.map((user) => <Followers key={user.id} user={user} isFollowing={false} />)
+        ) : (
+          <div className="w-full">
+            <p className="text-center py-5 text-sm text-gray-400">
+              You have no followers
+            </p>
+          </div>
+        )}
+        {/*  */}
+      </div>
+      {/* THOSE THAT I FOLLOW */}
+      <div className="border rounded-lg p-4">
+        <h1 className="text-2xl font-bold">Those that you follow</h1>
+        {/* Followers */}
+        {/* USE MAP HERE */}
+        {following.length > 0 ? (
+          following.map((user) => (
+            <Followers key={user.following.id} user={user.following} isFollowing={true} />
+          ))
+        ) : (
+          <div className="w-full">
+            <p className="text-center py-5 text-sm text-gray-400">
+              You have no followers
+            </p>
+          </div>
+        )}
         {/*  */}
       </div>
     </div>

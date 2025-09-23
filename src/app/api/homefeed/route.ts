@@ -53,7 +53,8 @@ export async function GET(request: Request) {
         parentId: null,
         // Include posts for those who follow you
         OR: [
-          { authorId: { in: targetUserIds } }, // All posts for those who follow you
+          { authorId: { in: targetUserIds } },
+          {authorId: {notIn: [...targetUserIds]}} // All posts for those who follow you
         ],
       },
       // Fields to include

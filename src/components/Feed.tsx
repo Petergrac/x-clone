@@ -110,7 +110,7 @@ const Feed = ({ tweet }: { tweet: TweetInteraction; hasLiked?: boolean }) => {
                 href={`/dashboard/${tweet.author.username}`}
                 className="text-lg font-semibold text-white/85"
               >
-                {tweet.author.username}
+                {tweet.author.name}
               </Link>
               {/* tweet handle */}
               <Link

@@ -4,14 +4,13 @@ import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
   const evt = await verifyWebhook(req);
-  console.log("Web hook reached");
   // Do something with payload
   // For this guide, log payload to console
 
   if (evt.type === "user.created") {
     console.log(evt.data);
     try {
-      const newUser = await prisma.user.create({
+      await prisma.user.create({
         data: {
           clerkId: evt.data.id,
           avatar: evt.data.image_url,
@@ -23,12 +22,13 @@ export async function POST(req: NextRequest) {
         },
       });
     } catch (error) {
+      console.log(error);
       console.error("Could not create the user");
     }
   }
   if (evt.type === "user.updated") {
     try {
-      const updatedUser = await prisma.user.update({
+      await prisma.user.update({
         where: {
           clerkId: evt.data.id,
         },
@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
       console.log("Updated The User");
     } catch (error) {
       console.log("Could not update the user");
+      console.log(error);
     }
   }
   if (evt.type === "user.deleted") {
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest) {
       });
       console.log("Deleted the user");
     } catch (error) {
-      console.log("Could not delete the user");
+      console.log("Could not delete the user", error);
     }
   }
   return new Response("Webhook received", { status: 200 });
