@@ -121,6 +121,12 @@ const UserPosts = async ({
           <UserPostNav />
         </div>
         <div className="">
+          {tweets.length === 0 && (
+            <div className="text-center text-sm text-gray-200 mt-5">
+              There are no tweets here. Click{" "}
+              <Link className="text-sky-500 hover:underline anim" href={`/dashboard`}>Here</Link> to be back to homepage.
+            </div>
+          )}
           {tweets.map((tweet) => (
             <div className="" key={tweet.id}>
               <Feed tweet={tweet} />

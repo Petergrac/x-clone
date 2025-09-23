@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import Followers from "./Followers";
+import ProgressiveSearch from "./SearchBar";
 
 const RightPanel = async () => {
   const { userId } = await auth();
@@ -55,14 +56,7 @@ const RightPanel = async () => {
   return (
     <div className="w-[clamp(290px,25vw,350px)] ml-6 lg:flex flex-col gap-3 h-fit hidden sticky z-40 top-0">
       {/* SEARCH BAR */}
-      <div className="flex items-center p-3 gap-2 rounded-full anim border flex-1 mt-2  hover:border-sky-400 hover:border-1">
-        <SearchIcon color="gray" />
-        <input
-          type="text"
-          placeholder="Search"
-          className="bg-transparent outline-none"
-        />
-      </div>
+      <ProgressiveSearch />
       {/* Today news */}
       <div className="border rounded-lg">
         <h1 className="text-2xl font-bold mb-6 px-4 py-2">Today&apos;s News</h1>
@@ -118,7 +112,9 @@ const RightPanel = async () => {
         {/* Followers */}
         {/* USE MAP HERE */}
         {notFollowedBack.length > 0 ? (
-          notFollowedBack.map((user) => <Followers key={user.id} user={user} isFollowing={false} />)
+          notFollowedBack.map((user) => (
+            <Followers key={user.id} user={user} isFollowing={false} />
+          ))
         ) : (
           <div className="w-full">
             <p className="text-center py-5 text-sm text-gray-400">
@@ -135,7 +131,11 @@ const RightPanel = async () => {
         {/* USE MAP HERE */}
         {following.length > 0 ? (
           following.map((user) => (
-            <Followers key={user.following.id} user={user.following} isFollowing={true} />
+            <Followers
+              key={user.following.id}
+              user={user.following}
+              isFollowing={true}
+            />
           ))
         ) : (
           <div className="w-full">

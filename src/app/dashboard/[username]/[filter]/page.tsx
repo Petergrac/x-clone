@@ -161,10 +161,10 @@ const FilteredPosts = async ({
   }
   if (!interactions || interactions.length === 0) {
     return (
-      <div className="h-[40vh] w-full flex items-center justify-center">
+      <div className="h-[40vh] w-full flex items-start justify-center">
         {filter === "replies" ? (
           <p className="text-sm">
-            You haven&apos;t replied to any post.Click{" "}
+            No replies tweeted here.Click{" "}
             <Link className="text-sky-500 hover:underline" href={`/dashboard`}>
               Here
             </Link>{" "}
@@ -172,7 +172,7 @@ const FilteredPosts = async ({
           </p>
         ) : (
           <p className="text-sm">
-            You have&apos;nt liked any post.Click
+            No liked tweets.Click
             <Link className="text-sky-500 hover:underline" href={`/dashboard`}>
               Here
             </Link>{" "}
